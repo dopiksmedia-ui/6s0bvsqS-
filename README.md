@@ -23,8 +23,9 @@
 - **Booking**: `/api/booking/*`
 
 ### Admin Panel
-- **URL**: `/admin` (قيد التطوير)
-- **Default Login**: `admin@doctor.com` / `admin123`
+- **URL**: `/admin` أو `/static/admin.html`
+- **Default Login**: `admin` / `admin123` ⚠️ **يرجى تغيير كلمة المرور فوراً!**
+- **Status**: ✅ **LIVE & WORKING**
 
 ---
 
@@ -59,14 +60,19 @@
 
 ### 🔐 للإدارة | For Administration
 
-#### 📊 لوحة التحكم | Admin Panel (قيد التطوير)
+#### 📊 لوحة التحكم | Admin Panel ✅ WORKING
+- ✅ **نظام مصادقة** - تسجيل دخول بسيط (LIVE)
+- ✅ **إدارة المقالات** - إضافة/تعديل/حذف (LIVE)
+- ✅ **إدارة الإعدادات** - اللوجو واللغات (LIVE)
+- ✅ **قاعدة بيانات D1** - SQLite محلي وإنتاج (LIVE)
+- ✅ **واجهة إدارية** - لوحة تحكم كاملة بالعربية (LIVE)
+- ✅ **دعم ثنائي اللغة** - المقالات بالعربي والإنجليزي (LIVE)
 - 🔄 **Dashboard** - إحصائيات وملخص
 - 🔄 **إدارة ملف الدكتور** - تعديل المعلومات الأساسية
 - 🔄 **إدارة الشهادات** - إضافة/تعديل/حذف
 - 🔄 **إدارة المستشفيات** - تاريخ العمل
 - 🔄 **إدارة الفيديوهات** - YouTube embeds
 - 🔄 **إدارة الآراء** - موافقة/رفض/نشر
-- 🔄 **إدارة المقالات** - محرر نصوص غني + SEO
 - 🔄 **إدارة الحجوزات** - تأكيد/إلغاء/ملاحظات
 - 🔄 **إعدادات أوقات العمل** - ساعات وعطلات
 - 🔄 **مكتبة الوسائط** - رفع الصور والملفات
@@ -236,24 +242,26 @@ npm run git:log            # View commit history
 ## 📊 Database Schema
 
 ### Core Tables
-1. **users** - Admin users & authentication
-2. **doctor_profile** - Doctor information
-3. **certificates** - Certifications & credentials
-4. **hospitals** - Work experience
-5. **videos** - Media & interviews
-6. **testimonials** - Patient reviews
-7. **categories** - Article categories
-8. **tags** - Article tags
-9. **articles** - Blog posts
-10. **article_tags** - Many-to-many relationship
-11. **booking_slots** - Time slot configuration
-12. **booking_exceptions** - Holidays & special days
-13. **bookings** - Patient appointments
-14. **site_settings** - Configuration key-value store
-15. **media_library** - Uploaded files
-16. **audit_log** - Activity tracking (optional)
+1. **users** - Admin users & authentication ✅
+2. **articles** - Blog posts (bilingual) ✅
+3. **article_images** - Article media ✅
+4. **site_settings** - Configuration (logo, languages) ✅
+5. **doctor_profile** - Doctor information 🔄
+6. **certificates** - Certifications & credentials 🔄
+7. **hospitals** - Work experience 🔄
+8. **videos** - Media & interviews 🔄
+9. **testimonials** - Patient reviews 🔄
+10. **categories** - Article categories 🔄
+11. **tags** - Article tags 🔄
+12. **article_tags** - Many-to-many relationship 🔄
+13. **booking_slots** - Time slot configuration ✅
+14. **booking_exceptions** - Holidays & special days ✅
+15. **bookings** - Patient appointments ✅
+16. **media_library** - Uploaded files 🔄
+17. **audit_log** - Activity tracking 🔄
 
-📖 **Full schema**: See `migrations/0001_create_initial_schema.sql`
+📖 **Current schema**: See `migrations/0002_basic_cms_setup.sql`
+📖 **Full planned schema**: See `migrations/0001_create_cms_tables.sql`
 
 ---
 
@@ -492,12 +500,11 @@ Proprietary - All rights reserved
 
 - 📜 **المقالات** `/articles` - قائمة المقالات الطبية
 - 📰 **مقال منفرد** `/articles/:slug` - عرض مقال كامل
-- 🎥 **الفيديوهات** `/videos` - مكتبة الفيديوهات
+- 🎥 **الفيديوهات** `/videos` - مكتبة الفيديوهات (YouTube integration added ✅)
 - 🏆 **الشهادات** `/certificates` - الشهادات والاعتمادات
 - 🏥 **المستشفيات** `/hospitals` - تاريخ العمل
 - 💬 **اتصل بنا** `/contact` - نموذج تواصل
-- 🔐 **تسجيل دخول الإدارة** `/admin/login`
-- 📊 **لوحة التحكم** `/admin/dashboard`
+- 🔐 **لوحة التحكم** `/admin` - ✅ **LIVE** (تسجيل دخول: admin/admin123)
 
 ---
 
@@ -563,6 +570,18 @@ Proprietary - All rights reserved
 - ✅ **صفحة الحجز** (/booking) - بمنيو وفوتر كاملين
 
 ### 🛠️ ملفات المكونات
+```bash
+src/
+├── components/
+│   ├── navigation.ts    # مكون قائمة التنقل (reusable)
+│   └── footer.ts        # مكون الفوتر (reusable)
+└── routes/
+    ├── home-page.tsx    # الصفحة الرئيسية
+    ├── about-page.tsx   # صفحة عن الدكتور
+    └── booking-page.tsx # صفحة الحجز
+```
+
+�لمكونات
 ```bash
 src/
 ├── components/
