@@ -347,7 +347,239 @@ function updateLogoPreview(url) {
 }
 
 // ============================================
-// Helper Functions
+// Articles Management (continued)
+// ============================================
+
+function showArticleForm() {
+    currentArticleId = null;
+    
+    // Create and show a simple article form since we don't have the full modal yet
+    const formHtml = `
+        <div id="simpleArticleForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div class="bg-white rounded-lg max-w-4xl w-full p-8 my-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">مقال جديد</h3>
+                    <button onclick="closeSimpleArticleForm()" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                
+                <form id="simpleArticleFormElement" class="space-y-6">
+                    <input type="hidden" id="article_id">
+                    
+                    <!-- Titles -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">عنوان المقال (عربي) *</label>
+                            <input type="text" id="article_title_ar" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Article Title (English) *</label>
+                            <input type="text" id="article_title_en" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Excerpts -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">مقتطف (عربي)</label>
+                            <textarea id="article_excerpt_ar" rows="3"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Excerpt (English)</label>
+                            <textarea id="article_excerpt_en" rows="3"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">المحتوى (عربي) *</label>
+                            <textarea id="article_content_ar" rows="10" required
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Content (English) *</label>
+                            <textarea id="article_content_en" rows="10" required
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 font-mono"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Image & Category -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">رابط الصورة الرئيسية</label>
+                            <input type="url" id="article_main_image"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                   placeholder="https://images.unsplash.com/...">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">التصنيف</label>
+                            <select id="article_category"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                <option value="">اختر التصنيف</option>
+                                <option value="health">صحة</option>
+                                <option value="surgery">جراحة</option>
+                                <option value="prevention">وقاية</option>
+                                <option value="nutrition">تغذية</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- SEO Fields -->
+                    <div class="border-t pt-6">
+                        <h4 class="text-lg font-bold mb-4">إعدادات SEO (اختياري)</h4>
+                        <div class="grid md:grid-cols-2 gap-6 mb-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">عنوان SEO (عربي)</label>
+                                <input type="text" id="article_meta_title_ar" maxlength="60"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">SEO Title (English)</label>
+                                <input type="text" id="article_meta_title_en" maxlength="60"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">وصف SEO (عربي)</label>
+                                <textarea id="article_meta_description_ar" rows="2" maxlength="160"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">SEO Description (English)</label>
+                                <textarea id="article_meta_description_en" rows="2" maxlength="160"
+                                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Publish Status -->
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">حالة النشر</label>
+                        <select id="article_is_published"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            <option value="0">مسودة</option>
+                            <option value="1">منشور</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Buttons -->
+                    <div class="flex justify-end space-x-4 space-x-reverse pt-6 border-t">
+                        <button type="button" onclick="closeSimpleArticleForm()"
+                                class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                            إلغاء
+                        </button>
+                        <button type="submit"
+                                class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md">
+                            <i class="fas fa-save mr-2"></i>
+                            حفظ المقال
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', formHtml);
+    
+    // Add form submit handler
+    document.getElementById('simpleArticleFormElement').addEventListener('submit', handleArticleSubmit);
+}
+
+function closeSimpleArticleForm() {
+    const form = document.getElementById('simpleArticleForm');
+    if (form) {
+        form.remove();
+    }
+}
+
+async function editArticle(id) {
+    try {
+        const response = await axios.get(`${API_BASE}/articles/${id}`);
+        const article = response.data.article;
+        
+        currentArticleId = id;
+        showArticleForm();
+        
+        // Wait for form to be created
+        setTimeout(() => {
+            // Fill form with article data
+            document.getElementById('article_id').value = id;
+            document.getElementById('article_title_ar').value = article.title_ar || '';
+            document.getElementById('article_title_en').value = article.title_en || '';
+            document.getElementById('article_excerpt_ar').value = article.excerpt_ar || '';
+            document.getElementById('article_excerpt_en').value = article.excerpt_en || '';
+            document.getElementById('article_content_ar').value = article.content_ar || '';
+            document.getElementById('article_content_en').value = article.content_en || '';
+            document.getElementById('article_main_image').value = article.main_image_url || '';
+            document.getElementById('article_category').value = article.category || '';
+            document.getElementById('article_is_published').value = article.is_published || 0;
+            
+            // SEO fields
+            document.getElementById('article_meta_title_ar').value = article.meta_title_ar || '';
+            document.getElementById('article_meta_title_en').value = article.meta_title_en || '';
+            document.getElementById('article_meta_description_ar').value = article.meta_description_ar || '';
+            document.getElementById('article_meta_description_en').value = article.meta_description_en || '';
+            
+            // Update form title
+            document.querySelector('#simpleArticleForm h3').textContent = 'تعديل المقال';
+        }, 100);
+    } catch (error) {
+        console.error('Error loading article:', error);
+        showNotification('فشل تحميل المقال', 'error');
+    }
+}
+
+async function handleArticleSubmit(e) {
+    e.preventDefault();
+    
+    const articleData = {
+        title_ar: document.getElementById('article_title_ar').value,
+        title_en: document.getElementById('article_title_en').value,
+        excerpt_ar: document.getElementById('article_excerpt_ar').value,
+        excerpt_en: document.getElementById('article_excerpt_en').value,
+        content_ar: document.getElementById('article_content_ar').value,
+        content_en: document.getElementById('article_content_en').value,
+        main_image_url: document.getElementById('article_main_image').value,
+        category: document.getElementById('article_category').value,
+        is_published: parseInt(document.getElementById('article_is_published').value),
+        meta_title_ar: document.getElementById('article_meta_title_ar').value,
+        meta_title_en: document.getElementById('article_meta_title_en').value,
+        meta_description_ar: document.getElementById('article_meta_description_ar').value,
+        meta_description_en: document.getElementById('article_meta_description_en').value,
+        tags: [],
+        meta_keywords: [],
+        related_articles: [],
+        read_time: 5
+    };
+    
+    try {
+        if (currentArticleId) {
+            // Update existing article
+            await axios.put(`${API_BASE}/articles/${currentArticleId}`, articleData);
+            showNotification('تم تحديث المقال بنجاح', 'success');
+        } else {
+            // Create new article
+            await axios.post(`${API_BASE}/articles`, articleData);
+            showNotification('تم إضافة المقال بنجاح', 'success');
+        }
+        
+        closeSimpleArticleForm();
+        loadArticles();
+    } catch (error) {
+        console.error('Error saving article:', error);
+        showNotification('فشل حفظ المقال: ' + (error.response?.data?.error || error.message), 'error');
+    }
+}
+
+// ============================================
+// Helper Functions (continued)
 // ============================================
 
 function formatDate(dateString) {
