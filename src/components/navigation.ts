@@ -35,10 +35,6 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
               <i class="fas fa-user-md ml-2"></i>
               ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
             </a>
-            <a href="/services" class="nav-link ${currentPath === '/services' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
-              <i class="fas fa-briefcase-medical ml-2"></i>
-              ${lang === 'ar' ? 'الخدمات' : 'Services'}
-            </a>
             <a href="/articles" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
               <i class="fas fa-newspaper ml-2"></i>
               ${lang === 'ar' ? 'المقالات' : 'Articles'}
@@ -77,10 +73,6 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
             <a href="/about" class="nav-link ${currentPath === '/about' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-user-md ml-2"></i>
               ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
-            </a>
-            <a href="/services" class="nav-link ${currentPath === '/services' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
-              <i class="fas fa-briefcase-medical ml-2"></i>
-              ${lang === 'ar' ? 'الخدمات' : 'Services'}
             </a>
             <a href="/articles" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-newspaper ml-2"></i>

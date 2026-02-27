@@ -9,7 +9,7 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
   return `
     <footer class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-12 mt-16">
       <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           <!-- About Column -->
           <div>
@@ -52,12 +52,6 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
                 </a>
               </li>
               <li>
-                <a href="/services" class="text-gray-400 hover:text-white transition-colors flex items-center">
-                  <i class="fas fa-chevron-${isRTL ? 'left' : 'right'} text-xs ml-2"></i>
-                  ${lang === 'ar' ? 'الخدمات' : 'Services'}
-                </a>
-              </li>
-              <li>
                 <a href="/articles" class="text-gray-400 hover:text-white transition-colors flex items-center">
                   <i class="fas fa-chevron-${isRTL ? 'left' : 'right'} text-xs ml-2"></i>
                   ${lang === 'ar' ? 'المقالات' : 'Articles'}
@@ -74,39 +68,6 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
                   <i class="fas fa-chevron-${isRTL ? 'left' : 'right'} text-xs ml-2"></i>
                   ${lang === 'ar' ? 'اتصل بنا' : 'Contact Us'}
                 </a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Services -->
-          <div>
-            <h3 class="text-lg font-bold mb-4 text-blue-400">
-              ${lang === 'ar' ? 'خدماتنا' : 'Our Services'}
-            </h3>
-            <ul class="space-y-2">
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'علاج أورام القولون والمستقيم' : 'Colorectal Cancer Treatment'}
-              </li>
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'جراحات الروبوت' : 'Robotic Surgery'}
-              </li>
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'جراحات المناظير المتقدمة' : 'Advanced Laparoscopic Surgery'}
-              </li>
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'علاج البواسير والنواسير' : 'Hemorrhoids & Fistula Treatment'}
-              </li>
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'حقن البوتكس للشرخ الشرجي' : 'Botox for Anal Fissure'}
-              </li>
-              <li class="text-gray-400 text-sm flex items-center">
-                <i class="fas fa-check-circle text-teal-500 ml-2"></i>
-                ${lang === 'ar' ? 'مناظير تشخيصية وعلاجية' : 'Diagnostic & Therapeutic Endoscopy'}
               </li>
             </ul>
           </div>
