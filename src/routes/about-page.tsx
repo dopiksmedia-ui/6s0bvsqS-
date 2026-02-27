@@ -105,7 +105,7 @@ aboutPage.get('/', (c) => {
                             <i class="fas fa-calendar-check"></i>
                             ${lang === 'ar' ? 'احجز موعدك' : 'Book Appointment'}
                         </a>
-                        <a href="https://wa.me/966XXXXXXXXX" class="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-600 transition inline-flex items-center gap-2">
+                        <a href="https://wa.me/966569925966" class="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-600 transition inline-flex items-center gap-2">
                             <i class="fab fa-whatsapp"></i>
                             ${lang === 'ar' ? 'واتساب' : 'WhatsApp'}
                         </a>
