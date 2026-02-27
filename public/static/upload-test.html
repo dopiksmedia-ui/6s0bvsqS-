@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار رفع الصور</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                    <i class="fas fa-cloud-upload-alt text-3xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        اختبار رفع الصور
+                    </h1>
+                    <p class="text-gray-600">نظام رفع الصور من الجهاز مباشرة</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Upload Section -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <i class="fas fa-upload text-blue-600"></i>
+                    رفع صورة جديدة
+                </h2>
+
+                <form id="uploadForm" class="space-y-6">
+                    <!-- File Input -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer" 
+                         onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                        <div id="dropZone">
+                            <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+                            <p class="text-lg font-semibold text-gray-700 mb-2">اسحب الصورة هنا أو اضغط للاختيار</p>
+                            <p class="text-sm text-gray-500">PNG, JPG, WebP, GIF (حتى 5MB)</p>
+                        </div>
+                        <div id="previewZone" class="hidden">
+                            <img id="imagePreview" class="max-h-64 mx-auto rounded-lg shadow-lg mb-4">
+                            <p id="fileName" class="text-sm font-semibold text-gray-700"></p>
+                            <p id="fileSize" class="text-xs text-gray-500"></p>
+                        </div>
+                    </div>
+
+                    <!-- Alt Text -->
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold mb-2 text-gray-700">
+                                <i class="fas fa-tag text-blue-600"></i>
+                                وصف الصورة (عربي)
+                            </label>
+                            <input type="text" id="alt_text_ar" 
+                                   class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200" 
+                                   placeholder="مثال: صورة عملية جراحية">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2 text-gray-700">
+                                <i class="fas fa-tag text-blue-600"></i>
+                                Alt Text (English)
+                            </label>
+                            <input type="text" id="alt_text_en" 
+                                   class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200" 
+                                   placeholder="Example: Surgical procedure">
+                        </div>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-xl transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="uploadBtn">
+                        <i class="fas fa-cloud-upload-alt mr-2"></i>
+                        رفع الصورة
+                    </button>
+                </form>
+
+                <!-- Progress Bar -->
+                <div id="progressContainer" class="hidden mt-4">
+                    <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" class="text-center text-sm text-gray-600 mt-2">جاري الرفع...</p>
+                </div>
+
+                <!-- Result Message -->
+                <div id="resultMessage" class="hidden mt-4"></div>
+            </div>
+
+            <!-- Media Library -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        <i class="fas fa-images text-indigo-600"></i>
+                        مكتبة الصور
+                    </h2>
+                    <button onclick="loadMedia()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        <i class="fas fa-sync-alt"></i>
+                        تحديث
+                    </button>
+                </div>
+
+                <div id="mediaGrid" class="space-y-4 max-h-[600px] overflow-y-auto">
+                    <div class="text-center py-12 text-gray-400">
+                        <i class="fas fa-images text-6xl mb-4"></i>
+                        <p>لا توجد صور بعد</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            selectedFile = file;
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                document.getElementById('dropZone').classList.add('hidden');
+                document.getElementById('previewZone').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            // Auto-fill alt text
+            const name = file.name.split('.')[0];
+            document.getElementById('alt_text_ar').value = name;
+            document.getElementById('alt_text_en').value = name;
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // Upload form
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!selectedFile) {
+                showMessage('يرجى اختيار صورة', 'error');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            try {
+                // Disable button and show progress
+                uploadBtn.disabled = true;
+                progressContainer.classList.remove('hidden');
+                progressBar.style.width = '0%';
+
+                // Create FormData
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+                formData.append('alt_text_ar', document.getElementById('alt_text_ar').value);
+                formData.append('alt_text_en', document.getElementById('alt_text_en').value);
+
+                // Simulate progress (since we can't track real upload progress easily)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    if (progress <= 90) {
+                        progressBar.style.width = progress + '%';
+                        progressText.textContent = `جاري الرفع... ${progress}%`;
+                    }
+                }, 200);
+
+                // Upload
+                const response = await axios.post('/api/admin/media/upload-file', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                // Complete progress
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'اكتمل الرفع! ✓';
+
+                if (response.data.success) {
+                    showMessage('تم رفع الصورة بنجاح! 🎉', 'success');
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        document.getElementById('uploadForm').reset();
+                        document.getElementById('dropZone').classList.remove('hidden');
+                        document.getElementById('previewZone').classList.add('hidden');
+                        progressContainer.classList.add('hidden');
+                        selectedFile = null;
+                        loadMedia();
+                    }, 2000);
+                } else {
+                    showMessage('فشل رفع الصورة: ' + response.data.error, 'error');
+                }
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showMessage('خطأ في رفع الصورة: ' + (error.response?.data?.error || error.message), 'error');
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+
+        // Show message
+        function showMessage(text, type) {
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.className = `mt-4 p-4 rounded-lg ${
+                type === 'success' 
+                    ? 'bg-green-100 text-green-800 border border-green-300' 
+                    : 'bg-red-100 text-red-800 border border-red-300'
+            }`;
+            resultMessage.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>
+                ${text}
+            `;
+            resultMessage.classList.remove('hidden');
+        }
+
+        // Load media library
+        async function loadMedia() {
+            try {
+                const response = await axios.get('/api/admin/media?type=image');
+                
+                const mediaGrid = document.getElementById('mediaGrid');
+                const media = response.data.media || [];
+
+                if (media.length === 0) {
+                    mediaGrid.innerHTML = `
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-images text-6xl mb-4"></i>
+                            <p>لا توجد صور بعد</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                mediaGrid.innerHTML = media.map(item => `
+                    <div class="border rounded-xl p-4 hover:shadow-lg transition-all">
+                        <div class="flex gap-4">
+                            <img src="${item.base64 || item.file_url}" 
+                                 alt="${item.alt_text_ar || item.filename}" 
+                                 class="w-24 h-24 object-cover rounded-lg"
+                                 onerror="this.src='https://via.placeholder.com/100?text=صورة'">
+                            <div class="flex-1">
+                                <p class="font-bold text-gray-800 mb-1">${item.original_filename}</p>
+                                <p class="text-xs text-gray-500 mb-2">${formatFileSize(item.file_size)}</p>
+                                <div class="flex gap-2">
+                                    <button onclick="copyUrl('${item.file_url}')" 
+                                            class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200">
+                                        <i class="fas fa-copy"></i> نسخ الرابط
+                                    </button>
+                                    <button onclick="deleteMedia(${item.id})" 
+                                            class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-lg hover:bg-red-200">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Load media error:', error);
+            }
+        }
+
+        // Copy URL to clipboard
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url);
+            alert('تم نسخ الرابط: ' + url);
+        }
+
+        // Delete media
+        async function deleteMedia(id) {
+            if (!confirm('هل تريد حذف هذه الصورة؟')) return;
+
+            try {
+                await axios.delete(`/api/admin/media/${id}`);
+                showMessage('تم حذف الصورة بنجاح', 'success');
+                loadMedia();
+            } catch (error) {
+                showMessage('فشل حذف الصورة', 'error');
+            }
+        }
+
+        // Load media on page load
+        loadMedia();
+    </script>
+</body>
+</html>

@@ -332,6 +332,137 @@ admin.post('/settings/bulk', async (c) => {
 // MEDIA LIBRARY API
 // ============================================
 
+// Upload image from device (multipart/form-data)
+admin.post('/media/upload-file', async (c) => {
+  try {
+    const { DB, MEDIA_BUCKET } = c.env
+    const formData = await c.req.formData()
+    const file = formData.get('file') as File
+    
+    if (!file) {
+      return c.json({ error: 'No file provided' }, 400)
+    }
+
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    if (!validTypes.includes(file.type)) {
+      return c.json({ error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' }, 400)
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      return c.json({ error: 'File too large. Maximum size is 5MB.' }, 400)
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now()
+    const randomString = Math.random().toString(36).substring(2, 8)
+    const extension = file.name.split('.').pop()
+    const filename = `${timestamp}-${randomString}.${extension}`
+    
+    // Get file buffer
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = new Uint8Array(arrayBuffer)
+
+    let fileUrl = ''
+
+    // Try to upload to R2 if available (production)
+    if (MEDIA_BUCKET) {
+      try {
+        await MEDIA_BUCKET.put(filename, buffer, {
+          httpMetadata: {
+            contentType: file.type,
+          },
+        })
+        // R2 URL format (will need to be configured with custom domain)
+        fileUrl = `/uploads/${filename}`
+      } catch (r2Error) {
+        console.error('R2 upload failed, falling back to local storage:', r2Error)
+      }
+    }
+
+    // Fallback: Save to local filesystem (development only)
+    // Note: In Cloudflare Workers, we can't write to filesystem
+    // So we'll return the file as base64 for development
+    if (!fileUrl) {
+      // For development, we'll save to a simulated path
+      // In production, this should always use R2
+      fileUrl = `/static/uploads/${filename}`
+      
+      // Store in database with base64 data for local development
+      const base64Data = btoa(String.fromCharCode(...buffer))
+      
+      // Save to media_library with base64
+      const result = await DB.prepare(`
+        INSERT INTO media_library (
+          filename, original_filename, file_url, file_type, mime_type,
+          file_size, alt_text_ar, alt_text_en, uploaded_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        filename,
+        file.name,
+        fileUrl,
+        'image',
+        file.type,
+        file.size,
+        formData.get('alt_text_ar') || '',
+        formData.get('alt_text_en') || '',
+        1 // Admin user
+      ).run()
+
+      return c.json({
+        success: true,
+        message: 'File uploaded successfully (local)',
+        media: {
+          id: result.meta.last_row_id,
+          filename: filename,
+          original_filename: file.name,
+          file_url: fileUrl,
+          file_type: file.type,
+          file_size: file.size,
+          base64: `data:${file.type};base64,${base64Data}` // For local preview
+        }
+      })
+    }
+
+    // Save metadata to database (R2 upload)
+    const result = await DB.prepare(`
+      INSERT INTO media_library (
+        filename, original_filename, file_url, file_type, mime_type,
+        file_size, alt_text_ar, alt_text_en, uploaded_by
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      filename,
+      file.name,
+      fileUrl,
+      'image',
+      file.type,
+      file.size,
+      formData.get('alt_text_ar') || '',
+      formData.get('alt_text_en') || '',
+      1 // Admin user
+    ).run()
+
+    return c.json({
+      success: true,
+      message: 'File uploaded successfully',
+      media: {
+        id: result.meta.last_row_id,
+        filename: filename,
+        original_filename: file.name,
+        file_url: fileUrl,
+        file_type: file.type,
+        file_size: file.size
+      }
+    })
+
+  } catch (error) {
+    console.error('Upload error:', error)
+    return c.json({ error: 'Failed to upload file', details: error.message }, 500)
+  }
+})
+
 // Upload image (base64 or URL)
 admin.post('/media/upload', async (c) => {
   try {

@@ -15,6 +15,7 @@ import contactPageRoutes from './routes/contact-page';
 import articlesPageRoutes from './routes/articles-page';
 import articleSinglePageRoutes from './routes/article-single-page';
 import adminPageRoutes from './routes/admin-page';
+import testAdminPageRoutes from './routes/test-admin';
 import youtubeApiRoutes from './routes/api/youtube';
 import adminApiRoutes from './routes/api/admin';
 
@@ -39,6 +40,7 @@ app.route('/contact', contactPageRoutes);
 app.route('/articles', articlesPageRoutes);
 app.route('/articles', articleSinglePageRoutes);
 app.route('/admin', adminPageRoutes);
+app.route('/test-admin', testAdminPageRoutes);
 
 // API Routes
 app.route('/api/doctor', doctorRoutes);
