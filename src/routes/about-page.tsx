@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
 import type { AppContext } from '../types';
+import { getNavigation } from '../components/navigation';
+import { getFooter } from '../components/footer';
 
 const aboutPage = new Hono<AppContext>();
 
@@ -59,27 +61,7 @@ aboutPage.get('/', (c) => {
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold text-blue-600">
-                    ${lang === 'ar' ? 'د. محمد سعيد' : 'Dr. Mohammed Saeed'}
-                </a>
-                <div class="flex gap-6 items-center">
-                    <a href="/" class="text-gray-600 hover:text-blue-600 transition">
-                        ${lang === 'ar' ? 'الرئيسية' : 'Home'}
-                    </a>
-                    <a href="/about" class="text-blue-600 font-semibold">
-                        ${lang === 'ar' ? 'عن الدكتور' : 'About'}
-                    </a>
-                    <a href="/booking" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                        ${lang === 'ar' ? 'احجز الآن' : 'Book Now'}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    ${getNavigation(lang, '/about')}
 
     <!-- Hero Section with Doctor Image -->
     <section class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white py-20">
@@ -474,103 +456,7 @@ aboutPage.get('/', (c) => {
         </div>
     </section>
 
-    <!-- Main Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- About Column -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
-                    </h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        ${lang === 'ar'
-                            ? 'د. أحمد محمد الشريف - استشاري جراحة عامة ومناظير بخبرة تمتد لأكثر من 15 عاماً في تقديم أفضل الخدمات الطبية.'
-                            : 'Dr. Ahmed Mohammed Al-Shareef - Consultant General & Laparoscopic Surgeon with over 15 years of experience providing the best medical services.'}
-                    </p>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        ${lang === 'ar' ? 'روابط سريعة' : 'Quick Links'}
-                    </h3>
-                    <ul class="space-y-2">
-                        <li><a href="/" class="text-gray-400 hover:text-blue-400 transition">${lang === 'ar' ? 'الرئيسية' : 'Home'}</a></li>
-                        <li><a href="/about" class="text-gray-400 hover:text-blue-400 transition">${lang === 'ar' ? 'عن الدكتور' : 'About'}</a></li>
-                        <li><a href="/booking" class="text-gray-400 hover:text-blue-400 transition">${lang === 'ar' ? 'حجز موعد' : 'Book Appointment'}</a></li>
-                        <li><a href="/articles" class="text-gray-400 hover:text-blue-400 transition">${lang === 'ar' ? 'المقالات' : 'Articles'}</a></li>
-                        <li><a href="/contact" class="text-gray-400 hover:text-blue-400 transition">${lang === 'ar' ? 'اتصل بنا' : 'Contact Us'}</a></li>
-                    </ul>
-                </div>
-
-                <!-- Services -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        ${lang === 'ar' ? 'الخدمات' : 'Services'}
-                    </h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li>${lang === 'ar' ? 'جراحات المناظير' : 'Laparoscopic Surgery'}</li>
-                        <li>${lang === 'ar' ? 'جراحات السمنة' : 'Bariatric Surgery'}</li>
-                        <li>${lang === 'ar' ? 'جراحة المرارة' : 'Gallbladder Surgery'}</li>
-                        <li>${lang === 'ar' ? 'جراحة الفتق' : 'Hernia Surgery'}</li>
-                        <li>${lang === 'ar' ? 'جراحات الطوارئ' : 'Emergency Surgery'}</li>
-                    </ul>
-                </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">
-                        ${lang === 'ar' ? 'تواصل معنا' : 'Contact Us'}
-                    </h3>
-                    <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-phone"></i>
-                            <span dir="ltr">+966 XX XXX XXXX</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-envelope"></i>
-                            <span>info@drahmed.com</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>${lang === 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia'}</span>
-                        </li>
-                    </ul>
-
-                    <!-- Social Media -->
-                    <div class="mt-6">
-                        <div class="flex gap-4">
-                            <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Footer -->
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-                <p>
-                    © ${new Date().getFullYear()} ${lang === 'ar' ? 'د. أحمد محمد الشريف - جميع الحقوق محفوظة' : 'Dr. Ahmed Mohammed Al-Shareef - All Rights Reserved'}
-                </p>
-                <div class="mt-2 flex justify-center gap-4 text-sm">
-                    <a href="/privacy" class="hover:text-blue-400 transition">${lang === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}</a>
-                    <span>|</span>
-                    <a href="/terms" class="hover:text-blue-400 transition">${lang === 'ar' ? 'شروط الاستخدام' : 'Terms of Use'}</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    ${getFooter(lang)}
 </body>
 </html>
   `);

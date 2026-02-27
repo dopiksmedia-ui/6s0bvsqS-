@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
 import type { AppContext } from '../types';
+import { getNavigation } from '../components/navigation';
+import { getFooter } from '../components/footer';
 
 const bookingPage = new Hono<AppContext>();
 
@@ -39,20 +41,7 @@ bookingPage.get('/', (c) => {
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold text-blue-600">
-                    ${lang === 'ar' ? 'د. أحمد الشريف' : 'Dr. Ahmed Al-Shareef'}
-                </a>
-                <a href="/" class="text-gray-600 hover:text-blue-600">
-                    <i class="fas fa-arrow-${lang === 'ar' ? 'right' : 'left'}"></i>
-                    ${lang === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}
-                </a>
-            </div>
-        </div>
-    </nav>
+    ${getNavigation(lang, '/booking')}
 
     <!-- Main Content -->
     <div class="container mx-auto px-6 py-12">
@@ -555,6 +544,7 @@ bookingPage.get('/', (c) => {
             return timeStr;
         }
     </script>
+    ${getFooter(lang)}
 </body>
 </html>
   `);
