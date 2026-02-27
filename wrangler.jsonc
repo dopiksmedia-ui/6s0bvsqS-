@@ -13,5 +13,12 @@
       "database_id": "to-be-created",
       "migrations_dir": "migrations"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "doctor-media",
+      "preview_bucket_name": "doctor-media-preview"
+    }
   ]
 }

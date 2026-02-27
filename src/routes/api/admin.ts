@@ -7,6 +7,7 @@ import { cors } from 'hono/cors'
 
 type Bindings = {
   DB: D1Database;
+  MEDIA_BUCKET?: R2Bucket;
 }
 
 const admin = new Hono<{ Bindings: Bindings }>()
@@ -109,8 +110,11 @@ admin.post('/articles', async (c) => {
       INSERT INTO articles (
         slug, title_ar, title_en, excerpt_ar, excerpt_en,
         content_ar, content_en, main_image_url, category, tags,
-        is_published, published_at, author_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        is_published, published_at, author_id,
+        meta_title_ar, meta_title_en, meta_description_ar, meta_description_en,
+        meta_keywords, featured_video_embed, seo_index, seo_follow,
+        canonical_url, og_image_url, related_articles, read_time
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       slug,
       article.title_ar,
@@ -124,7 +128,19 @@ admin.post('/articles', async (c) => {
       JSON.stringify(article.tags || []),
       article.is_published ? 1 : 0,
       article.is_published ? new Date().toISOString() : null,
-      1 // Default admin user
+      1, // Default admin user
+      article.meta_title_ar || article.title_ar,
+      article.meta_title_en || article.title_en,
+      article.meta_description_ar || article.excerpt_ar || '',
+      article.meta_description_en || article.excerpt_en || '',
+      JSON.stringify(article.meta_keywords || []),
+      article.featured_video_embed || '',
+      article.seo_index !== undefined ? article.seo_index : 1,
+      article.seo_follow !== undefined ? article.seo_follow : 1,
+      article.canonical_url || '',
+      article.og_image_url || article.main_image_url || '',
+      JSON.stringify(article.related_articles || []),
+      article.read_time || 5
     ).run()
 
     return c.json({
@@ -158,6 +174,18 @@ admin.put('/articles/:id', async (c) => {
         tags = ?,
         is_published = ?,
         published_at = ?,
+        meta_title_ar = ?,
+        meta_title_en = ?,
+        meta_description_ar = ?,
+        meta_description_en = ?,
+        meta_keywords = ?,
+        featured_video_embed = ?,
+        seo_index = ?,
+        seo_follow = ?,
+        canonical_url = ?,
+        og_image_url = ?,
+        related_articles = ?,
+        read_time = ?,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
     `).bind(
@@ -172,6 +200,18 @@ admin.put('/articles/:id', async (c) => {
       JSON.stringify(article.tags || []),
       article.is_published ? 1 : 0,
       article.is_published ? new Date().toISOString() : null,
+      article.meta_title_ar || article.title_ar,
+      article.meta_title_en || article.title_en,
+      article.meta_description_ar || article.excerpt_ar || '',
+      article.meta_description_en || article.excerpt_en || '',
+      JSON.stringify(article.meta_keywords || []),
+      article.featured_video_embed || '',
+      article.seo_index !== undefined ? article.seo_index : 1,
+      article.seo_follow !== undefined ? article.seo_follow : 1,
+      article.canonical_url || '',
+      article.og_image_url || article.main_image_url || '',
+      JSON.stringify(article.related_articles || []),
+      article.read_time || 5,
       id
     ).run()
 
@@ -285,6 +325,180 @@ admin.post('/settings/bulk', async (c) => {
     })
   } catch (error) {
     return c.json({ error: 'Failed to update settings' }, 500)
+  }
+})
+
+// ============================================
+// MEDIA LIBRARY API
+// ============================================
+
+// Upload image (base64 or URL)
+admin.post('/media/upload', async (c) => {
+  try {
+    const { DB } = c.env
+    const body = await c.req.json()
+    
+    const { 
+      filename, 
+      file_url, 
+      file_type = 'image',
+      mime_type = 'image/jpeg',
+      file_size = 0,
+      width = 0,
+      height = 0,
+      alt_text_ar = '',
+      alt_text_en = '',
+      caption_ar = '',
+      caption_en = ''
+    } = body
+
+    // Insert into media library
+    const result = await DB.prepare(`
+      INSERT INTO media_library (
+        filename, original_filename, file_url, file_type, mime_type,
+        file_size, width, height, alt_text_ar, alt_text_en,
+        caption_ar, caption_en, uploaded_by
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(
+      filename,
+      filename,
+      file_url,
+      file_type,
+      mime_type,
+      file_size,
+      width,
+      height,
+      alt_text_ar,
+      alt_text_en,
+      caption_ar,
+      caption_en,
+      1 // Admin user
+    ).run()
+
+    return c.json({
+      success: true,
+      message: 'Media uploaded successfully',
+      media: {
+        id: result.meta.last_row_id,
+        file_url: file_url
+      }
+    })
+  } catch (error) {
+    console.error('Upload error:', error)
+    return c.json({ error: 'Failed to upload media' }, 500)
+  }
+})
+
+// Get all media
+admin.get('/media', async (c) => {
+  try {
+    const { DB } = c.env
+    const type = c.req.query('type') // Filter by type
+    
+    let query = `SELECT * FROM media_library`
+    const params: any[] = []
+    
+    if (type) {
+      query += ` WHERE file_type = ?`
+      params.push(type)
+    }
+    
+    query += ` ORDER BY created_at DESC`
+    
+    const { results } = await DB.prepare(query).bind(...params).all()
+
+    return c.json({ success: true, media: results })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch media' }, 500)
+  }
+})
+
+// Delete media
+admin.delete('/media/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+
+    // TODO: Delete from R2 bucket in production
+    
+    await DB.prepare(`
+      DELETE FROM media_library WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({
+      success: true,
+      message: 'Media deleted successfully'
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to delete media' }, 500)
+  }
+})
+
+// Get article images
+admin.get('/articles/:id/images', async (c) => {
+  try {
+    const { DB } = c.env
+    const articleId = c.req.param('id')
+
+    const { results } = await DB.prepare(`
+      SELECT 
+        ai.*,
+        m.file_url,
+        m.filename,
+        m.alt_text_ar,
+        m.alt_text_en,
+        m.caption_ar,
+        m.caption_en
+      FROM article_images ai
+      JOIN media_library m ON ai.media_id = m.id
+      WHERE ai.article_id = ?
+      ORDER BY ai.display_order
+    `).bind(articleId).all()
+
+    return c.json({ success: true, images: results })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch article images' }, 500)
+  }
+})
+
+// Add image to article
+admin.post('/articles/:id/images', async (c) => {
+  try {
+    const { DB } = c.env
+    const articleId = c.req.param('id')
+    const { media_id, display_order = 0, position_in_content = null } = await c.req.json()
+
+    const result = await DB.prepare(`
+      INSERT INTO article_images (article_id, media_id, display_order, position_in_content)
+      VALUES (?, ?, ?, ?)
+    `).bind(articleId, media_id, display_order, position_in_content).run()
+
+    return c.json({
+      success: true,
+      message: 'Image added to article',
+      id: result.meta.last_row_id
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to add image to article' }, 500)
+  }
+})
+
+// Remove image from article
+admin.delete('/articles/:articleId/images/:imageId', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageId = c.req.param('imageId')
+
+    await DB.prepare(`
+      DELETE FROM article_images WHERE id = ?
+    `).bind(imageId).run()
+
+    return c.json({
+      success: true,
+      message: 'Image removed from article'
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to remove image' }, 500)
   }
 })
 
