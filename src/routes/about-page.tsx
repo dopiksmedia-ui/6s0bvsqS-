@@ -71,9 +71,10 @@ aboutPage.get('/', (c) => {
                 <div class="relative" data-aos="fade-right">
                     <div class="relative z-10">
                         <img 
-                            src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop" 
+                            src="/doctor-mohammed-saeed.jpg" 
                             alt="Dr. Mohammed Saeed" 
                             class="rounded-2xl shadow-2xl w-full max-w-md mx-auto"
+                            onerror="this.src='https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop'"
                         >
                         <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 bg-white text-blue-600 px-8 py-4 rounded-xl shadow-lg">
                             <div class="text-3xl font-bold">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
@@ -353,7 +354,71 @@ aboutPage.get('/', (c) => {
                     </p>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6 mb-12">
+                <!-- Contact Information -->
+                <div class="bg-gray-50 p-8 rounded-2xl mb-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                        ${lang === 'ar' ? 'معلومات الاتصال' : 'Contact Information'}
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- Phone -->
+                        <div class="text-center">
+                            <i class="fas fa-phone text-3xl text-blue-600 mb-3"></i>
+                            <div class="font-semibold text-gray-800 mb-2">
+                                ${lang === 'ar' ? 'الهاتف' : 'Phone'}
+                            </div>
+                            <a href="tel:+966127444444" class="text-blue-600 hover:underline" dir="ltr">
+                                012 744 4444
+                            </a>
+                        </div>
+
+                        <!-- WhatsApp -->
+                        <div class="text-center">
+                            <i class="fab fa-whatsapp text-3xl text-green-600 mb-3"></i>
+                            <div class="font-semibold text-gray-800 mb-2">
+                                ${lang === 'ar' ? 'واتساب' : 'WhatsApp'}
+                            </div>
+                            <a href="https://wa.me/966569925966" class="text-green-600 hover:underline" dir="ltr">
+                                +966 56 992 5966
+                            </a>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="text-center">
+                            <i class="fas fa-map-marker-alt text-3xl text-blue-600 mb-3"></i>
+                            <div class="font-semibold text-gray-800 mb-2">
+                                ${lang === 'ar' ? 'الموقع' : 'Location'}
+                            </div>
+                            <div class="text-gray-600">
+                                ${lang === 'ar' 
+                                    ? 'مستشفى د. سليمان الحبيب<br>فرع الفيحاء - جدة'
+                                    : 'Dr. Sulaiman Al Habib Hospital<br>Al Faisaliah - Jeddah'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Working Hours -->
+                    <div class="mt-8 border-t border-gray-200 pt-6">
+                        <h4 class="font-semibold text-gray-800 mb-4 text-center">
+                            ${lang === 'ar' ? 'ساعات العمل' : 'Working Hours'}
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-4 text-center">
+                            <div>
+                                <div class="font-medium text-gray-700">
+                                    ${lang === 'ar' ? 'السبت - الخميس' : 'Saturday - Thursday'}
+                                </div>
+                                <div class="text-gray-600">4:00 PM - 10:00 PM</div>
+                            </div>
+                            <div>
+                                <div class="font-medium text-gray-700">
+                                    ${lang === 'ar' ? 'الجمعة' : 'Friday'}
+                                </div>
+                                <div class="text-red-600">${lang === 'ar' ? 'مغلق' : 'Closed'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
                     <!-- Booking Card -->
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl">
                         <i class="fas fa-calendar-check text-5xl text-blue-600 mb-4"></i>
@@ -382,74 +447,10 @@ aboutPage.get('/', (c) => {
                                 ? 'تواصل معنا مباشرة عبر الواتساب للرد على استفساراتك أو حجز موعد.'
                                 : 'Contact us directly via WhatsApp to answer your inquiries or book an appointment.'}
                         </p>
-                        <a href="https://wa.me/966XXXXXXXXX" class="inline-block bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition">
+                        <a href="https://wa.me/966569925966" class="inline-block bg-green-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-700 transition">
                             ${lang === 'ar' ? 'تواصل الآن' : 'Contact Now'}
                             <i class="fab fa-whatsapp ${lang === 'ar' ? 'mr' : 'ml'}-2"></i>
                         </a>
-                    </div>
-                </div>
-
-                <!-- Contact Information -->
-                <div class="bg-gray-50 p-8 rounded-2xl">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        ${lang === 'ar' ? 'معلومات الاتصال' : 'Contact Information'}
-                    </h3>
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <!-- Phone -->
-                        <div class="text-center">
-                            <i class="fas fa-phone text-3xl text-blue-600 mb-3"></i>
-                            <div class="font-semibold text-gray-800 mb-2">
-                                ${lang === 'ar' ? 'الهاتف' : 'Phone'}
-                            </div>
-                            <a href="tel:+966XXXXXXXXX" class="text-blue-600 hover:underline" dir="ltr">
-                                +966 XX XXX XXXX
-                            </a>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="text-center">
-                            <i class="fas fa-envelope text-3xl text-blue-600 mb-3"></i>
-                            <div class="font-semibold text-gray-800 mb-2">
-                                ${lang === 'ar' ? 'البريد الإلكتروني' : 'Email'}
-                            </div>
-                            <a href="mailto:info@drahmed.com" class="text-blue-600 hover:underline">
-                                info@drahmed.com
-                            </a>
-                        </div>
-
-                        <!-- Location -->
-                        <div class="text-center">
-                            <i class="fas fa-map-marker-alt text-3xl text-blue-600 mb-3"></i>
-                            <div class="font-semibold text-gray-800 mb-2">
-                                ${lang === 'ar' ? 'الموقع' : 'Location'}
-                            </div>
-                            <div class="text-gray-600">
-                                ${lang === 'ar' 
-                                    ? 'مستشفى الملك فيصل التخصصي<br>الرياض، المملكة العربية السعودية'
-                                    : 'King Faisal Specialist Hospital<br>Riyadh, Saudi Arabia'}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Working Hours -->
-                    <div class="mt-8 border-t border-gray-200 pt-6">
-                        <h4 class="font-semibold text-gray-800 mb-4 text-center">
-                            ${lang === 'ar' ? 'ساعات العمل' : 'Working Hours'}
-                        </h4>
-                        <div class="grid md:grid-cols-2 gap-4 text-center">
-                            <div>
-                                <div class="font-medium text-gray-700">
-                                    ${lang === 'ar' ? 'الأحد - الخميس' : 'Sunday - Thursday'}
-                                </div>
-                                <div class="text-gray-600">4:00 PM - 9:00 PM</div>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-700">
-                                    ${lang === 'ar' ? 'الجمعة - السبت' : 'Friday - Saturday'}
-                                </div>
-                                <div class="text-red-600">${lang === 'ar' ? 'مغلق' : 'Closed'}</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
