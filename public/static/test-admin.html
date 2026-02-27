@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold mb-6">اختبار API - إضافة مقال</h1>
+        
+        <form id="testForm" class="space-y-4">
+            <div>
+                <label class="block font-bold mb-2">عنوان المقال (عربي)</label>
+                <input type="text" id="title_ar" class="w-full p-2 border rounded" required>
+            </div>
+            
+            <div>
+                <label class="block font-bold mb-2">Article Title (English)</label>
+                <input type="text" id="title_en" class="w-full p-2 border rounded" required>
+            </div>
+            
+            <div>
+                <label class="block font-bold mb-2">المحتوى (عربي)</label>
+                <textarea id="content_ar" rows="4" class="w-full p-2 border rounded" required></textarea>
+            </div>
+            
+            <div>
+                <label class="block font-bold mb-2">Content (English)</label>
+                <textarea id="content_en" rows="4" class="w-full p-2 border rounded" required></textarea>
+            </div>
+            
+            <div>
+                <label class="block font-bold mb-2">التصنيف</label>
+                <select id="category" class="w-full p-2 border rounded">
+                    <option value="health">صحة</option>
+                    <option value="surgery">جراحة</option>
+                    <option value="prevention">وقاية</option>
+                    <option value="nutrition">تغذية</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                حفظ المقال
+            </button>
+        </form>
+        
+        <div id="result" class="mt-6 p-4 hidden"></div>
+        
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">المقالات الموجودة:</h2>
+            <div id="articlesList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load articles on page load
+        loadArticles();
+
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                title_ar: document.getElementById('title_ar').value,
+                title_en: document.getElementById('title_en').value,
+                content_ar: document.getElementById('content_ar').value,
+                content_en: document.getElementById('content_en').value,
+                category: document.getElementById('category').value,
+                is_published: 1
+            };
+            
+            try {
+                const response = await axios.post('/api/admin/articles', data);
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.className = 'mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded';
+                resultDiv.textContent = '✅ تم إضافة المقال بنجاح! ID: ' + response.data.id;
+                resultDiv.classList.remove('hidden');
+                
+                // Clear form
+                document.getElementById('testForm').reset();
+                
+                // Reload articles
+                loadArticles();
+            } catch (error) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.className = 'mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded';
+                resultDiv.textContent = '❌ خطأ: ' + (error.response?.data?.error || error.message);
+                resultDiv.classList.remove('hidden');
+            }
+        });
+        
+        async function loadArticles() {
+            try {
+                const response = await axios.get('/api/admin/articles');
+                const articles = response.data.articles;
+                
+                const listDiv = document.getElementById('articlesList');
+                listDiv.innerHTML = articles.map(a => `
+                    <div class="border p-4 mb-2 rounded">
+                        <h3 class="font-bold">${a.title_ar}</h3>
+                        <p class="text-sm text-gray-600">${a.title_en}</p>
+                        <p class="text-xs text-gray-500">ID: ${a.id} | ${a.category} | ${a.is_published ? 'منشور' : 'مسودة'}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading articles:', error);
+            }
+        }
+    </script>
+</body>
+</html>
