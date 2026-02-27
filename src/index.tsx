@@ -11,6 +11,7 @@ import bookingRoutes from './routes/booking';
 import bookingPageRoutes from './routes/booking-page';
 import aboutPageRoutes from './routes/about-page';
 import homePageRoutes from './routes/home-page';
+import contactPageRoutes from './routes/contact-page';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -29,6 +30,7 @@ app.use('/static/*', serveStatic({ root: './public' }));
 app.route('/', homePageRoutes);
 app.route('/booking', bookingPageRoutes);
 app.route('/about', aboutPageRoutes);
+app.route('/contact', contactPageRoutes);
 
 // API Routes
 app.route('/api/doctor', doctorRoutes);
