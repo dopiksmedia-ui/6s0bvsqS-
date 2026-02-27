@@ -14,7 +14,9 @@ import homePageRoutes from './routes/home-page';
 import contactPageRoutes from './routes/contact-page';
 import articlesPageRoutes from './routes/articles-page';
 import articleSinglePageRoutes from './routes/article-single-page';
+import adminPageRoutes from './routes/admin-page';
 import youtubeApiRoutes from './routes/api/youtube';
+import adminApiRoutes from './routes/api/admin';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -36,12 +38,14 @@ app.route('/about', aboutPageRoutes);
 app.route('/contact', contactPageRoutes);
 app.route('/articles', articlesPageRoutes);
 app.route('/articles', articleSinglePageRoutes);
+app.route('/admin', adminPageRoutes);
 
 // API Routes
 app.route('/api/doctor', doctorRoutes);
 app.route('/api/articles', articlesRoutes);
 app.route('/api/booking', bookingRoutes);
 app.route('/api/youtube', youtubeApiRoutes);
+app.route('/api/admin', adminApiRoutes);
 
 app.get('/api/health', (c) => {
   return c.json({

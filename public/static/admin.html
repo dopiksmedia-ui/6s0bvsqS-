@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - إدارة الموقع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <i class="fas fa-user-shield text-5xl text-blue-600 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h2>
+                <p class="text-gray-600 mt-2">الرجاء إدخال بيانات المسؤول</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">اسم المستخدم</label>
+                    <input type="text" id="username" name="username" value="admin" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                           required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">كلمة المرور</label>
+                    <input type="password" id="password" name="password" value="admin123"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                           required>
+                </div>
+                <div id="loginError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    دخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <i class="fas fa-hospital text-3xl text-blue-600"></i>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">لوحة التحكم</h1>
+                            <p class="text-gray-600 text-sm">إدارة محتوى الموقع</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white border-b">
+            <div class="container mx-auto px-6">
+                <div class="flex space-x-8 space-x-reverse">
+                    <button onclick="switchTab('articles')" class="tab-btn py-4 px-6 border-b-2 border-blue-600 text-blue-600 font-semibold">
+                        <i class="fas fa-newspaper mr-2"></i>
+                        المقالات
+                    </button>
+                    <button onclick="switchTab('settings')" class="tab-btn py-4 px-6 border-b-2 border-transparent text-gray-600 hover:text-blue-600">
+                        <i class="fas fa-cog mr-2"></i>
+                        الإعدادات
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <main class="container mx-auto px-6 py-8">
+            <!-- Articles Tab -->
+            <div id="articlesTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-newspaper mr-2"></i>
+                            إدارة المقالات
+                        </h2>
+                        <button onclick="showArticleForm()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            مقال جديد
+                        </button>
+                    </div>
+                    
+                    <div id="articlesList" class="space-y-4">
+                        <!-- Articles will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Article Form Modal -->
+                <div id="articleFormModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
+                    <div class="bg-white rounded-lg p-8 max-w-4xl w-full mx-4 my-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800" id="formTitle">مقال جديد</h3>
+                            <button onclick="closeArticleForm()" class="text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                        
+                        <form id="articleForm" class="space-y-6">
+                            <input type="hidden" id="articleId" name="id">
+                            
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">عنوان المقال (عربي)</label>
+                                    <input type="text" id="title_ar" name="title_ar" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">عنوان المقال (English)</label>
+                                    <input type="text" id="title_en" name="title_en" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">مقتطف (عربي)</label>
+                                    <textarea id="excerpt_ar" name="excerpt_ar" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">مقتطف (English)</label>
+                                    <textarea id="excerpt_en" name="excerpt_en" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">المحتوى (عربي)</label>
+                                    <textarea id="content_ar" name="content_ar" rows="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">المحتوى (English)</label>
+                                    <textarea id="content_en" name="content_en" rows="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">رابط الصورة الرئيسية</label>
+                                    <input type="url" id="main_image_url" name="main_image_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">التصنيف</label>
+                                    <select id="category" name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                        <option value="">اختر التصنيف</option>
+                                        <option value="health">صحة</option>
+                                        <option value="surgery">جراحة</option>
+                                        <option value="prevention">وقاية</option>
+                                        <option value="nutrition">تغذية</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">حالة النشر</label>
+                                    <select id="is_published" name="is_published" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                        <option value="0">مسودة</option>
+                                        <option value="1">منشور</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-4 space-x-reverse">
+                                <button type="button" onclick="closeArticleForm()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                                    إلغاء
+                                </button>
+                                <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-save mr-2"></i>
+                                    حفظ المقال
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content hidden">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Logo Settings -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-image mr-2"></i>
+                            شعار الموقع
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">رابط الشعار</label>
+                                <input type="url" id="site_logo_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                            </div>
+                            <div id="logoPreview" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                                <img id="logoImage" src="" alt="Logo Preview" class="max-h-24 mx-auto hidden">
+                                <p class="text-gray-500">معاينة الشعار</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language Settings -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-language mr-2"></i>
+                            إعدادات اللغة
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">اللغة الأساسية</label>
+                                <select id="primary_language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="ar">العربية</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">اللغة الثانوية</label>
+                                <select id="secondary_language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="en">English</option>
+                                    <option value="ar">العربية</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="enable_secondary_language" class="w-5 h-5 text-blue-600">
+                                <label class="mr-3 text-gray-700">تفعيل اللغة الثانوية</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="saveSettings()" class="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-check mr-2"></i>
+                        حفظ الإعدادات
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>
