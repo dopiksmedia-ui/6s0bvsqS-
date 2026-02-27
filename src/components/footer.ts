@@ -131,17 +131,26 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
               <h4 class="text-sm font-semibold mb-3 text-gray-400">
                 ${lang === 'ar' ? 'تابعنا' : 'Follow Us'}
               </h4>
-              <div class="flex space-x-3 ${isRTL ? 'space-x-reverse' : ''}">
-                <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all transform hover:scale-110">
+              <div class="flex flex-wrap gap-3">
+                <a href="https://www.facebook.com/share/14MXfmjiznb/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="Facebook">
                   <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-blue-400 rounded-full flex items-center justify-center transition-all transform hover:scale-110">
-                  <i class="fab fa-twitter"></i>
+                <a href="https://x.com/dr_mohammed_ali?s=21" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-black rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="X (Twitter)">
+                  <i class="fab fa-x-twitter"></i>
                 </a>
-                <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-pink-600 rounded-full flex items-center justify-center transition-all transform hover:scale-110">
+                <a href="https://www.instagram.com/dr_mohammed.saeed.ali" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-pink-600 rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="Instagram">
                   <i class="fab fa-instagram"></i>
                 </a>
-                <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-green-500 rounded-full flex items-center justify-center transition-all transform hover:scale-110">
+                <a href="https://youtube.com/@dr.mohammedsaeedali?si=w8Tobr16n2UV6c02" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-red-600 rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="YouTube">
+                  <i class="fab fa-youtube"></i>
+                </a>
+                <a href="http://www.tiktok.com/@mohammedsaeedali51" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-black rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="TikTok">
+                  <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://snapchat.com/t/gpVQciif" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-yellow-400 rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="Snapchat">
+                  <i class="fab fa-snapchat-ghost"></i>
+                </a>
+                <a href="https://wa.me/966569925966" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-700 hover:bg-green-500 rounded-full flex items-center justify-center transition-all transform hover:scale-110" title="WhatsApp">
                   <i class="fab fa-whatsapp"></i>
                 </a>
               </div>

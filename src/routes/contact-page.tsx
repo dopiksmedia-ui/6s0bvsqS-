@@ -278,32 +278,37 @@ contactPage.get('/', (c) => {
                 
                 <div class="flex gap-6 justify-center flex-wrap">
                     <!-- Facebook -->
-                    <a href="#" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
+                    <a href="https://www.facebook.com/share/14MXfmjiznb/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="Facebook">
                         <i class="fab fa-facebook-f text-2xl text-blue-600"></i>
                     </a>
                     
-                    <!-- Twitter -->
-                    <a href="#" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
-                        <i class="fab fa-twitter text-2xl text-blue-400"></i>
+                    <!-- X (Twitter) -->
+                    <a href="https://x.com/dr_mohammed_ali?s=21" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="X (Twitter)">
+                        <i class="fab fa-x-twitter text-2xl text-black"></i>
                     </a>
                     
                     <!-- Instagram -->
-                    <a href="#" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
+                    <a href="https://www.instagram.com/dr_mohammed.saeed.ali" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="Instagram">
                         <i class="fab fa-instagram text-2xl text-pink-600"></i>
                     </a>
                     
-                    <!-- LinkedIn -->
-                    <a href="#" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
-                        <i class="fab fa-linkedin-in text-2xl text-blue-700"></i>
-                    </a>
-                    
                     <!-- YouTube -->
-                    <a href="#" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
+                    <a href="https://youtube.com/@dr.mohammedsaeedali?si=w8Tobr16n2UV6c02" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="YouTube">
                         <i class="fab fa-youtube text-2xl text-red-600"></i>
                     </a>
                     
+                    <!-- TikTok -->
+                    <a href="http://www.tiktok.com/@mohammedsaeedali51" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="TikTok">
+                        <i class="fab fa-tiktok text-2xl text-black"></i>
+                    </a>
+                    
+                    <!-- Snapchat -->
+                    <a href="https://snapchat.com/t/gpVQciif" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="Snapchat">
+                        <i class="fab fa-snapchat-ghost text-2xl text-yellow-400"></i>
+                    </a>
+                    
                     <!-- WhatsApp -->
-                    <a href="https://wa.me/966569925966" target="_blank" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl">
+                    <a href="https://wa.me/966569925966" target="_blank" rel="noopener noreferrer" class="social-btn w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-2xl" title="WhatsApp">
                         <i class="fab fa-whatsapp text-2xl text-green-600"></i>
                     </a>
                 </div>
