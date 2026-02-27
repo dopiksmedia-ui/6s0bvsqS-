@@ -106,8 +106,8 @@ app.get('/', (c) => {
                 ? 'يتميز د. أحمد بخبرة واسعة في مجال الجراحة العامة وجراحة المناظير، حيث أجرى آلاف العمليات الناجحة على مدار مسيرته المهنية.'
                 : 'Dr. Ahmed brings extensive experience in general and laparoscopic surgery, having performed thousands of successful operations throughout his career.'}
             </p>
-            <a href="/about" class="text-blue-600 font-semibold hover:text-blue-700">
-              {lang === 'ar' ? 'اقرأ المزيد ←' : 'Learn More →'}
+            <a href="/about" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+              {lang === 'ar' ? 'اقرأ المزيد عن الدكتور ←' : 'Learn More About Doctor →'}
             </a>
           </div>
         </div>
