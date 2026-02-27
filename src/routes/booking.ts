@@ -243,15 +243,16 @@ booking.post('/create', bookingRateLimit, async (c) => {
     const ipAddress = getClientIp(c.req.raw);
     const userAgent = getUserAgent(c.req.raw);
     
+    const consultationCol = lang === 'ar' ? 'consultation_type_ar' : 'consultation_type_en';
     const result = await c.env.DB.prepare(`
       INSERT INTO bookings (
         booking_number, patient_name, patient_phone, patient_email,
-        consultation_type_${lang}, booking_date, booking_time,
+        ${consultationCol}, booking_date, booking_time,
         reason, status, consent_privacy, ip_address, user_agent
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       bookingNumber, patient_name, patient_phone, patient_email,
-      consultation_type, booking_date, booking_time,
+      consultation_type || 'General Consultation', booking_date, booking_time,
       reason, 'pending', 1, ipAddress, userAgent
     ).run();
     

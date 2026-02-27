@@ -8,6 +8,7 @@ import type { AppContext } from './types';
 import doctorRoutes from './routes/doctor';
 import articlesRoutes from './routes/articles';
 import bookingRoutes from './routes/booking';
+import bookingPageRoutes from './routes/booking-page';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -21,6 +22,9 @@ app.use('/api/*', cors());
 
 // Serve static files from public directory
 app.use('/static/*', serveStatic({ root: './public' }));
+
+// Page Routes (before API routes)
+app.route('/booking', bookingPageRoutes);
 
 // API Routes
 app.route('/api/doctor', doctorRoutes);
