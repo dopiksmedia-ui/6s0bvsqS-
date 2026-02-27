@@ -9,8 +9,27 @@ const aboutPage = new Hono<AppContext>();
  * GET /about
  * About Us page with doctor information
  */
-aboutPage.get('/', (c) => {
+aboutPage.get('/', async (c) => {
   const lang = c.get('lang');
+  const { DB } = c.env;
+  
+  // Fetch active doctor image for About page
+  let doctorImage = '/static/uploads/doctor-about.jpg'; // fallback
+  try {
+    const { results } = await DB.prepare(`
+      SELECT image_url, alt_text_ar, alt_text_en
+      FROM doctor_images
+      WHERE image_type = 'about_hero' AND is_active = 1
+      ORDER BY display_order ASC, created_at DESC
+      LIMIT 1
+    `).all();
+    
+    if (results && results.length > 0) {
+      doctorImage = results[0].image_url;
+    }
+  } catch (error) {
+    console.error('Failed to fetch doctor image:', error);
+  }
   
   return c.html(`
 <!DOCTYPE html>
@@ -71,7 +90,7 @@ aboutPage.get('/', (c) => {
                 <div class="relative" data-aos="fade-right">
                     <div class="relative z-10">
                         <img 
-                            src="/doctor-mohammed-saeed.jpg" 
+                            src="${doctorImage}" 
                             alt="Dr. Mohammed Saeed" 
                             class="rounded-2xl shadow-2xl w-full max-w-md mx-auto"
                             onerror="this.src='https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop'"

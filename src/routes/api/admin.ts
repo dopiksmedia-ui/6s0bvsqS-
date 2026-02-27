@@ -971,6 +971,290 @@ admin.get('/bookings/export/csv', async (c) => {
 })
 
 // ============================================
+// DOCTOR IMAGES API
+// ============================================
+
+/**
+ * GET /api/admin/doctor-images
+ * Get all doctor images with optional filtering
+ */
+admin.get('/doctor-images', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageType = c.req.query('type') // 'about_hero', 'contact_profile', 'other'
+    
+    let query = `
+      SELECT 
+        id, image_type, image_url, alt_text_ar, alt_text_en,
+        is_active, display_order, uploaded_by, created_at, updated_at
+      FROM doctor_images
+      WHERE 1=1
+    `
+    const params: any[] = []
+    
+    if (imageType) {
+      query += ` AND image_type = ?`
+      params.push(imageType)
+    }
+    
+    query += ` ORDER BY is_active DESC, display_order ASC, created_at DESC`
+    
+    const stmt = params.length > 0 
+      ? DB.prepare(query).bind(...params)
+      : DB.prepare(query)
+    
+    const { results } = await stmt.all()
+    
+    return c.json({ 
+      success: true,
+      images: results || []
+    })
+  } catch (error) {
+    console.error('Get doctor images error:', error)
+    return c.json({ error: 'Failed to fetch doctor images' }, 500)
+  }
+})
+
+/**
+ * GET /api/admin/doctor-images/active/:type
+ * Get active doctor image by type (for frontend display)
+ */
+admin.get('/doctor-images/active/:type', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageType = c.req.param('type')
+    
+    const { results } = await DB.prepare(`
+      SELECT 
+        id, image_type, image_url, alt_text_ar, alt_text_en,
+        created_at, updated_at
+      FROM doctor_images
+      WHERE image_type = ? AND is_active = 1
+      ORDER BY display_order ASC, created_at DESC
+      LIMIT 1
+    `).bind(imageType).all()
+    
+    if (!results || results.length === 0) {
+      return c.json({ 
+        success: false,
+        message: 'No active image found',
+        image: null
+      })
+    }
+    
+    return c.json({ 
+      success: true,
+      image: results[0]
+    })
+  } catch (error) {
+    console.error('Get active doctor image error:', error)
+    return c.json({ error: 'Failed to fetch active doctor image' }, 500)
+  }
+})
+
+/**
+ * POST /api/admin/doctor-images
+ * Upload new doctor image
+ */
+admin.post('/doctor-images', async (c) => {
+  try {
+    const { DB } = c.env
+    const { 
+      image_type, 
+      image_url, 
+      alt_text_ar, 
+      alt_text_en,
+      is_active = 1,
+      display_order = 0
+    } = await c.req.json()
+    
+    // Validation
+    if (!image_type || !image_url) {
+      return c.json({ 
+        success: false,
+        error: 'Image type and URL are required' 
+      }, 400)
+    }
+    
+    if (!['about_hero', 'contact_profile', 'other'].includes(image_type)) {
+      return c.json({ 
+        success: false,
+        error: 'Invalid image type. Must be: about_hero, contact_profile, or other' 
+      }, 400)
+    }
+    
+    // If setting as active, deactivate other images of same type
+    if (is_active === 1) {
+      await DB.prepare(`
+        UPDATE doctor_images 
+        SET is_active = 0, updated_at = CURRENT_TIMESTAMP
+        WHERE image_type = ?
+      `).bind(image_type).run()
+    }
+    
+    // Insert new image
+    const result = await DB.prepare(`
+      INSERT INTO doctor_images (
+        image_type, image_url, alt_text_ar, alt_text_en,
+        is_active, display_order, uploaded_by
+      ) VALUES (?, ?, ?, ?, ?, ?, 1)
+    `).bind(
+      image_type,
+      image_url,
+      alt_text_ar || '',
+      alt_text_en || '',
+      is_active,
+      display_order
+    ).run()
+    
+    return c.json({
+      success: true,
+      message: image_type === 'about_hero' 
+        ? 'تم رفع صورة صفحة "عن الدكتور" بنجاح'
+        : image_type === 'contact_profile'
+        ? 'تم رفع صورة صفحة "التواصل" بنجاح'
+        : 'تم رفع الصورة بنجاح',
+      imageId: result.meta.last_row_id,
+      imageUrl: image_url
+    })
+  } catch (error) {
+    console.error('Upload doctor image error:', error)
+    return c.json({ error: 'Failed to upload doctor image' }, 500)
+  }
+})
+
+/**
+ * PUT /api/admin/doctor-images/:id
+ * Update doctor image details
+ */
+admin.put('/doctor-images/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageId = c.req.param('id')
+    const { 
+      alt_text_ar, 
+      alt_text_en,
+      is_active,
+      display_order
+    } = await c.req.json()
+    
+    // If setting as active, deactivate other images of same type
+    if (is_active === 1) {
+      const { results } = await DB.prepare(`
+        SELECT image_type FROM doctor_images WHERE id = ?
+      `).bind(imageId).all()
+      
+      if (results && results.length > 0) {
+        const imageType = results[0].image_type
+        await DB.prepare(`
+          UPDATE doctor_images 
+          SET is_active = 0, updated_at = CURRENT_TIMESTAMP
+          WHERE image_type = ? AND id != ?
+        `).bind(imageType, imageId).run()
+      }
+    }
+    
+    // Update image
+    await DB.prepare(`
+      UPDATE doctor_images 
+      SET 
+        alt_text_ar = COALESCE(?, alt_text_ar),
+        alt_text_en = COALESCE(?, alt_text_en),
+        is_active = COALESCE(?, is_active),
+        display_order = COALESCE(?, display_order),
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(
+      alt_text_ar,
+      alt_text_en,
+      is_active,
+      display_order,
+      imageId
+    ).run()
+    
+    return c.json({
+      success: true,
+      message: 'تم تحديث بيانات الصورة بنجاح'
+    })
+  } catch (error) {
+    console.error('Update doctor image error:', error)
+    return c.json({ error: 'Failed to update doctor image' }, 500)
+  }
+})
+
+/**
+ * PUT /api/admin/doctor-images/:id/set-active
+ * Set image as active (deactivate others of same type)
+ */
+admin.put('/doctor-images/:id/set-active', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageId = c.req.param('id')
+    
+    // Get image type
+    const { results } = await DB.prepare(`
+      SELECT image_type FROM doctor_images WHERE id = ?
+    `).bind(imageId).all()
+    
+    if (!results || results.length === 0) {
+      return c.json({ 
+        success: false,
+        error: 'Image not found' 
+      }, 404)
+    }
+    
+    const imageType = results[0].image_type
+    
+    // Deactivate all images of same type
+    await DB.prepare(`
+      UPDATE doctor_images 
+      SET is_active = 0, updated_at = CURRENT_TIMESTAMP
+      WHERE image_type = ?
+    `).bind(imageType).run()
+    
+    // Activate selected image
+    await DB.prepare(`
+      UPDATE doctor_images 
+      SET is_active = 1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(imageId).run()
+    
+    return c.json({
+      success: true,
+      message: 'تم تفعيل الصورة بنجاح'
+    })
+  } catch (error) {
+    console.error('Set active doctor image error:', error)
+    return c.json({ error: 'Failed to set active doctor image' }, 500)
+  }
+})
+
+/**
+ * DELETE /api/admin/doctor-images/:id
+ * Delete doctor image
+ */
+admin.delete('/doctor-images/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const imageId = c.req.param('id')
+    
+    // TODO: Delete actual file from storage (R2 in production)
+    
+    await DB.prepare(`
+      DELETE FROM doctor_images WHERE id = ?
+    `).bind(imageId).run()
+    
+    return c.json({
+      success: true,
+      message: 'تم حذف الصورة بنجاح'
+    })
+  } catch (error) {
+    console.error('Delete doctor image error:', error)
+    return c.json({ error: 'Failed to delete doctor image' }, 500)
+  }
+})
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 

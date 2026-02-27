@@ -9,8 +9,27 @@ const contactPage = new Hono<AppContext>();
  * GET /contact
  * Contact page with doctor contact information and clinic location
  */
-contactPage.get('/', (c) => {
+contactPage.get('/', async (c) => {
   const lang = c.get('lang');
+  const { DB } = c.env;
+  
+  // Fetch active doctor image for Contact page
+  let doctorImage = '/static/uploads/doctor-profile.jpg'; // fallback
+  try {
+    const { results } = await DB.prepare(`
+      SELECT image_url, alt_text_ar, alt_text_en
+      FROM doctor_images
+      WHERE image_type = 'contact_profile' AND is_active = 1
+      ORDER BY display_order ASC, created_at DESC
+      LIMIT 1
+    `).all();
+    
+    if (results && results.length > 0) {
+      doctorImage = results[0].image_url;
+    }
+  } catch (error) {
+    console.error('Failed to fetch doctor image:', error);
+  }
   
   return c.html(`
 <!DOCTYPE html>
@@ -62,7 +81,7 @@ contactPage.get('/', (c) => {
                 <div class="mb-8">
                     <div class="w-48 h-48 mx-auto rounded-full overflow-hidden border-8 border-white shadow-2xl">
                         <img 
-                            src="/doctor-mohammed-saeed.jpg" 
+                            src="${doctorImage}" 
                             alt="Dr. Mohammed Saeed" 
                             class="w-full h-full object-cover"
                             onerror="this.src='/doctor-photo.jpg'"
