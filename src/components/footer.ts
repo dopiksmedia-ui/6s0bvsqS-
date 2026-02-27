@@ -123,19 +123,19 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
                   <p class="text-gray-400 text-sm">
                     ${lang === 'ar' ? 'الهاتف' : 'Phone'}
                   </p>
-                  <a href="tel:+966XXXXXXXXX" class="text-white hover:text-teal-400 transition-colors">
-                    +966 XX XXX XXXX
+                  <a href="tel:+966127444444" class="text-white hover:text-teal-400 transition-colors" dir="ltr">
+                    012 744 4444
                   </a>
                 </div>
               </li>
               <li class="flex items-start">
-                <i class="fas fa-envelope text-teal-500 ml-3 mt-1"></i>
+                <i class="fab fa-whatsapp text-teal-500 ml-3 mt-1"></i>
                 <div>
                   <p class="text-gray-400 text-sm">
-                    ${lang === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                    ${lang === 'ar' ? 'واتساب' : 'WhatsApp'}
                   </p>
-                  <a href="mailto:info@drmohammed.sa" class="text-white hover:text-teal-400 transition-colors">
-                    info@drmohammed.sa
+                  <a href="https://wa.me/966569925966" target="_blank" class="text-white hover:text-teal-400 transition-colors" dir="ltr">
+                    +966 56 992 5966
                   </a>
                 </div>
               </li>
@@ -147,8 +147,8 @@ export function getFooter(lang: 'ar' | 'en' = 'ar'): string {
                   </p>
                   <p class="text-white">
                     ${lang === 'ar' 
-                      ? 'مستشفى المملكة، الرياض، المملكة العربية السعودية' 
-                      : 'Kingdom Hospital, Riyadh, Saudi Arabia'}
+                      ? 'مستشفى د. سليمان الحبيب - فرع الفيحاء، جدة' 
+                      : 'Dr. Sulaiman Al Habib Hospital - Al Faisaliah, Jeddah'}
                   </p>
                 </div>
               </li>
