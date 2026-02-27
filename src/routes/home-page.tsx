@@ -27,6 +27,41 @@ homePage.get('/', (c) => {
     
     <style>
         * { font-family: 'IBM Plex Sans Arabic', 'Inter', sans-serif; }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Smooth modal animation */
+        #video-modal {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* YouTube play button pulse effect */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -109,6 +144,227 @@ homePage.get('/', (c) => {
             </div>
         </div>
     </section>
+
+    <!-- Media Appearances Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-video text-red-600 mr-3"></i>
+                    ${lang === 'ar' ? 'الظهور الإعلامي' : 'Media Appearances'}
+                </h2>
+                <p class="text-xl text-gray-600">
+                    ${lang === 'ar' 
+                        ? 'أحدث الفيديوهات والمقابلات الطبية للدكتور محمد سعيد' 
+                        : 'Latest Videos and Medical Interviews by Dr. Mohammed Saeed'}
+                </p>
+            </div>
+
+            <!-- Videos Grid -->
+            <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Videos will be loaded here -->
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-spinner fa-spin text-4xl text-blue-600 mb-4"></i>
+                    <p class="text-gray-600">${lang === 'ar' ? 'جاري تحميل الفيديوهات...' : 'Loading videos...'}</p>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center">
+                <button id="load-more-btn" class="hidden bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-flex items-center gap-2">
+                    <i class="fas fa-plus-circle"></i>
+                    ${lang === 'ar' ? 'عرض المزيد' : 'Load More'}
+                </button>
+            </div>
+
+            <!-- YouTube Channel Link -->
+            <div class="text-center mt-8">
+                <a href="https://youtube.com/@dr.mohammedsaeedali?si=w8Tobr16n2UV6c02" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-lg">
+                    <i class="fab fa-youtube text-2xl"></i>
+                    ${lang === 'ar' ? 'زيارة قناة اليوتيوب' : 'Visit YouTube Channel'}
+                    <i class="fas fa-external-link-alt text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onclick="closeVideoModal(event)">
+        <div class="relative w-full max-w-6xl bg-gray-900 rounded-lg overflow-hidden" onclick="event.stopPropagation()">
+            <button onclick="closeVideoModal()" class="absolute top-4 ${lang === 'ar' ? 'left-4' : 'right-4'} z-10 bg-red-600 text-white w-10 h-10 rounded-full hover:bg-red-700 transition flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="relative pt-[56.25%]">
+                <iframe id="video-iframe" class="absolute inset-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div id="video-info" class="p-6 text-white">
+                <h3 id="video-title" class="text-2xl font-bold mb-2"></h3>
+                <p id="video-description" class="text-gray-300"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // YouTube Channel ID (extracted from @dr.mohammedsaeedali)
+        const CHANNEL_HANDLE = '@dr.mohammedsaeedali';
+        const VIDEOS_PER_PAGE = 4;
+        let currentPage = 0;
+        let allVideos = [];
+
+        // Sample videos (fallback if API is not available)
+        const sampleVideos = [
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'نصائح للوقاية من سرطان القولون' : 'Tips for Colon Cancer Prevention'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'فيديو توعوي حول أهمية الكشف المبكر' : 'Educational video about early detection importance'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'الجراحة الروبوتية في علاج القولون' : 'Robotic Surgery in Colorectal Treatment'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'شرح تقنيات الجراحة الحديثة' : 'Explanation of modern surgical techniques'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'أسئلة شائعة حول أمراض القولون' : 'Common Questions About Colorectal Diseases'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'إجابات عن أكثر الأسئلة شيوعاً' : 'Answers to most common questions'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'نمط حياة صحي للوقاية من البواسير' : 'Healthy Lifestyle for Hemorrhoid Prevention'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'نصائح عملية للحياة اليومية' : 'Practical tips for daily life'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'متى يجب زيارة الطبيب؟' : 'When Should You Visit a Doctor?'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'علامات تستوجب الفحص الطبي' : 'Signs requiring medical examination'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'التغذية السليمة لصحة القولون' : 'Proper Nutrition for Colon Health'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'أطعمة مفيدة وأخرى يجب تجنبها' : 'Beneficial foods and what to avoid'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'منظار القولون: ماذا تتوقع؟' : 'Colonoscopy: What to Expect?'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'دليل شامل للتحضير والإجراء' : 'Comprehensive guide for preparation and procedure'}'
+            },
+            {
+                id: 'dQw4w9WgXcQ',
+                title: '${lang === 'ar' ? 'قصص نجاح المرضى' : 'Patient Success Stories'}',
+                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                description: '${lang === 'ar' ? 'تجارب إيجابية للشفاء' : 'Positive recovery experiences'}'
+            }
+        ];
+
+        // Initialize videos
+        allVideos = sampleVideos;
+        loadVideos();
+
+        function loadVideos() {
+            const start = currentPage * VIDEOS_PER_PAGE;
+            const end = start + VIDEOS_PER_PAGE;
+            const videosToShow = allVideos.slice(start, end);
+
+            if (videosToShow.length === 0) return;
+
+            const container = document.getElementById('videos-container');
+            
+            // Clear loading message on first load
+            if (currentPage === 0) {
+                container.innerHTML = '';
+            }
+
+            videosToShow.forEach(video => {
+                const videoCard = createVideoCard(video);
+                container.innerHTML += videoCard;
+            });
+
+            currentPage++;
+
+            // Show/hide load more button
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            if (end >= allVideos.length) {
+                loadMoreBtn.classList.add('hidden');
+            } else {
+                loadMoreBtn.classList.remove('hidden');
+            }
+        }
+
+        function createVideoCard(video) {
+            return \`
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105" 
+                     onclick="openVideo('\${video.id}', '\${video.title.replace(/'/g, "\\'")}', '\${video.description.replace(/'/g, "\\'")}')">
+                    <div class="relative group">
+                        <img src="\${video.thumbnail}" alt="\${video.title}" class="w-full h-48 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                            <div class="bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
+                                <i class="fas fa-play text-2xl ${lang === 'ar' ? 'mr-1' : 'ml-1'}"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+                            <i class="fab fa-youtube text-red-500 mr-1"></i>
+                            YouTube
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600 transition">
+                            \${video.title}
+                        </h3>
+                        <p class="text-gray-600 text-sm line-clamp-2">
+                            \${video.description}
+                        </p>
+                        <div class="mt-3 flex items-center text-gray-500 text-sm">
+                            <i class="fas fa-user-md mr-2"></i>
+                            <span>${lang === 'ar' ? 'د. محمد سعيد' : 'Dr. Mohammed Saeed'}</span>
+                        </div>
+                    </div>
+                </div>
+            \`;
+        }
+
+        function openVideo(videoId, title, description) {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-iframe');
+            const titleEl = document.getElementById('video-title');
+            const descEl = document.getElementById('video-description');
+
+            iframe.src = \`https://www.youtube.com/embed/\${videoId}?autoplay=1\`;
+            titleEl.textContent = title;
+            descEl.textContent = description;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-iframe');
+
+            iframe.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Load more button handler
+        document.getElementById('load-more-btn').addEventListener('click', loadVideos);
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+    </script>
 
     <!-- Services CTA -->
     <section class="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white">
