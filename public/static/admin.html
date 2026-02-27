@@ -142,6 +142,14 @@
                         <i class="fas fa-cog mr-2"></i>
                         الإعدادات
                     </button>
+                    <button onclick="switchTab('doctor-images')" data-tab="doctor-images" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-user-md mr-2"></i>
+                        صور الدكتور
+                    </button>
+                    <button onclick="switchTab('bookings')" data-tab="bookings" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        الحجوزات
+                    </button>
                 </div>
             </div>
         </div>
@@ -243,6 +251,141 @@
                         <i class="fas fa-check mr-2"></i>
                         حفظ الإعدادات
                     </button>
+                </div>
+            </div>
+
+            <!-- Doctor Images Tab -->
+            <div id="doctor-imagesTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-user-md mr-2"></i>
+                                إدارة صور الدكتور
+                            </h2>
+                            <p class="text-gray-600 mt-2">التحكم في صور الدكتور في صفحات "عن الدكتور" و "التواصل معنا"</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <!-- About Page Image -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-blue-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-user-circle text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded-full">صفحة About</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "عن الدكتور"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الرئيسية (Hero Image) في صفحة التعريف بالدكتور</p>
+                            <a href="/static/doctor-images-admin.html?filter=about_hero" target="_blank" class="inline-flex items-center justify-center w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
+                        <!-- Contact Page Image -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-green-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-address-card text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-green-600 text-white rounded-full">صفحة Contact</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "التواصل معنا"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الدائرية (Profile Photo) في صفحة التواصل</p>
+                            <a href="/static/doctor-images-admin.html?filter=contact_profile" target="_blank" class="inline-flex items-center justify-center w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
+                        <!-- All Images -->
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-purple-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-images text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-purple-600 text-white rounded-full">الكل</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">جميع الصور</h3>
+                            <p class="text-sm text-gray-600 mb-4">عرض وإدارة جميع صور الدكتور المرفوعة</p>
+                            <a href="/static/doctor-images-admin.html" target="_blank" class="inline-flex items-center justify-center w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                                <i class="fas fa-th ml-2"></i>
+                                عرض الكل
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="bg-blue-50 border-r-4 border-blue-600 p-6 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-info-circle text-blue-600 ml-2"></i>
+                            كيفية الاستخدام
+                        </h4>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>رفع صورة جديدة:</strong> اضغط على "إدارة الصورة" ثم اسحب الصورة أو اختر من جهازك</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>تفعيل صورة:</strong> عند رفع صورة جديدة مع تفعيل "تفعيل تلقائياً"، ستظهر فوراً في الصفحة</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>تغيير الصورة:</strong> ارفع صورة جديدة وفعّلها، الصورة القديمة ستُلغى تلقائياً</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>أنواع الصور المدعومة:</strong> PNG, JPG, JPEG, WebP, GIF (أقصى حجم: 5MB)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Preview Links -->
+                    <div class="mt-8 grid md:grid-cols-2 gap-6">
+                        <a href="/about" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة صفحة "عن الدكتور"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-blue-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
+                        </a>
+                        <a href="/contact" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-green-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة صفحة "التواصل معنا"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-green-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="bookingsTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                إدارة الحجوزات
+                            </h2>
+                            <p class="text-gray-600 mt-2">عرض وإدارة حجوزات المرضى</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center py-12">
+                        <i class="fas fa-calendar-alt text-6xl text-blue-600 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">إدارة الحجوزات المتقدمة</h3>
+                        <p class="text-gray-600 mb-6">للوصول إلى لوحة التحكم الكاملة للحجوزات</p>
+                        <a href="/static/bookings-admin.html" target="_blank" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition font-semibold text-lg shadow-lg">
+                            <i class="fas fa-external-link-alt ml-2"></i>
+                            فتح لوحة الحجوزات
+                        </a>
+                    </div>
                 </div>
             </div>
         </main>
