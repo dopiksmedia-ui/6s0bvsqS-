@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الحجوزات - لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-check text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">إدارة الحجوزات</h1>
+                        <p class="text-sm text-gray-600">عرض وإدارة جميع المواعيد المحجوزة</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="exportBookings()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-file-excel mr-2"></i>
+                        تصدير Excel
+                    </button>
+                    <button onclick="loadBookings()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>
+                        تحديث
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-blue-600 text-xl"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800" id="stat-total">0</span>
+                </div>
+                <p class="text-gray-600 font-semibold">إجمالي الحجوزات</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800" id="stat-pending">0</span>
+                </div>
+                <p class="text-gray-600 font-semibold">قيد الانتظار</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800" id="stat-confirmed">0</span>
+                </div>
+                <p class="text-gray-600 font-semibold">مؤكدة</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-calendar-day text-indigo-600 text-xl"></i>
+                    </div>
+                    <span class="text-3xl font-bold text-gray-800" id="stat-upcoming">0</span>
+                </div>
+                <p class="text-gray-600 font-semibold">القادمة (7 أيام)</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">الحالة</label>
+                    <select id="filter-status" onchange="loadBookings()" class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                        <option value="">الكل</option>
+                        <option value="pending">قيد الانتظار</option>
+                        <option value="confirmed">مؤكدة</option>
+                        <option value="cancelled">ملغاة</option>
+                        <option value="completed">مكتملة</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">الشهر</label>
+                    <input type="month" id="filter-month" onchange="loadBookings()" class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">تاريخ محدد</label>
+                    <input type="date" id="filter-date" onchange="loadBookings()" class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">بحث</label>
+                    <input type="text" id="search-input" placeholder="بحث بالاسم أو الرقم..." class="w-full p-3 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-right text-sm font-bold">رقم الحجز</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">اسم المريض</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">رقم الجوال</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">التاريخ</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">الوقت</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">الحالة</th>
+                            <th class="px-6 py-4 text-right text-sm font-bold">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-table-body" class="divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                <i class="fas fa-calendar-times text-6xl mb-4 text-gray-300"></i>
+                                <p>جاري تحميل الحجوزات...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="hidden px-6 py-4 border-t bg-gray-50 flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    عرض <span id="pagination-showing">0</span> من <span id="pagination-total">0</span> حجز
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="previousPage()" id="btn-prev" class="px-4 py-2 border rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-chevron-right"></i>
+                        السابق
+                    </button>
+                    <button onclick="nextPage()" id="btn-next" class="px-4 py-2 border rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                        التالي
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Details Modal -->
+    <div id="booking-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold">تفاصيل الحجز</h2>
+                    <button onclick="closeModal()" class="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="booking-details" class="p-6"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 left-4 bg-gray-800 text-white px-6 py-4 rounded-lg shadow-xl z-50">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const limit = 20;
+        let totalBookings = 0;
+
+        // Load bookings
+        async function loadBookings() {
+            try {
+                const status = document.getElementById('filter-status').value;
+                const month = document.getElementById('filter-month').value;
+                const date = document.getElementById('filter-date').value;
+                const search = document.getElementById('search-input').value;
+
+                let url = `/api/admin/bookings?limit=${limit}&offset=${currentPage * limit}`;
+                if (status) url += `&status=${status}`;
+                if (month) url += `&month=${month}`;
+                if (date) url += `&date=${date}`;
+
+                const response = await axios.get(url);
+                const { bookings, pagination } = response.data;
+
+                displayBookings(bookings, search);
+                updatePagination(pagination);
+                loadStats();
+
+            } catch (error) {
+                console.error('Load error:', error);
+                showToast('فشل تحميل الحجوزات', 'error');
+            }
+        }
+
+        // Display bookings
+        function displayBookings(bookings, search = '') {
+            const tbody = document.getElementById('bookings-table-body');
+            
+            // Filter by search
+            const filtered = search ? bookings.filter(b => 
+                b.patient_name.includes(search) || 
+                b.patient_phone.includes(search) ||
+                b.booking_number.includes(search)
+            ) : bookings;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+                            <p>لا توجد حجوزات</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(booking => `
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4">
+                        <span class="font-mono text-sm font-bold text-blue-600">${booking.booking_number}</span>
+                    </td>
+                    <td class="px-6 py-4 font-semibold">${booking.patient_name}</td>
+                    <td class="px-6 py-4">
+                        <a href="tel:${booking.patient_phone}" class="text-blue-600 hover:underline">
+                            <i class="fas fa-phone mr-1"></i>
+                            ${booking.patient_phone}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4">${formatDate(booking.booking_date)}</td>
+                    <td class="px-6 py-4 font-mono">${booking.booking_time}</td>
+                    <td class="px-6 py-4">
+                        ${getStatusBadge(booking.status)}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-2">
+                            <button onclick="viewBooking(${booking.id})" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors" title="عرض التفاصيل">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="confirmBooking(${booking.id})" class="text-green-600 hover:bg-green-50 p-2 rounded-lg transition-colors" title="تأكيد">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button onclick="cancelBooking(${booking.id})" class="text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors" title="إلغاء">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const month = document.getElementById('filter-month').value;
+                const url = `/api/admin/bookings/stats${month ? '?month=' + month : ''}`;
+                
+                const response = await axios.get(url);
+                const { stats } = response.data;
+
+                document.getElementById('stat-total').textContent = stats.total;
+                document.getElementById('stat-upcoming').textContent = stats.upcoming;
+
+                const statusMap = {};
+                stats.byStatus.forEach(s => statusMap[s.status] = s.count);
+
+                document.getElementById('stat-pending').textContent = statusMap.pending || 0;
+                document.getElementById('stat-confirmed').textContent = statusMap.confirmed || 0;
+
+            } catch (error) {
+                console.error('Stats error:', error);
+            }
+        }
+
+        // View booking details
+        async function viewBooking(id) {
+            try {
+                const response = await axios.get(`/api/admin/bookings/${id}`);
+                const { booking } = response.data;
+
+                document.getElementById('booking-details').innerHTML = `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-sm font-bold text-gray-600">رقم الحجز</label>
+                                <p class="text-lg font-mono font-bold text-blue-600">${booking.booking_number}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-bold text-gray-600">الحالة</label>
+                                <p class="text-lg">${getStatusBadge(booking.status)}</p>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-6">
+                            <h3 class="font-bold text-lg mb-4">معلومات المريض</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm font-bold text-gray-600">الاسم</label>
+                                    <p class="text-lg">${booking.patient_name}</p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-bold text-gray-600">رقم الجوال</label>
+                                    <p class="text-lg">${booking.patient_phone}</p>
+                                </div>
+                                ${booking.patient_email ? `
+                                <div class="col-span-2">
+                                    <label class="text-sm font-bold text-gray-600">البريد الإلكتروني</label>
+                                    <p class="text-lg">${booking.patient_email}</p>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-6">
+                            <h3 class="font-bold text-lg mb-4">تفاصيل الموعد</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm font-bold text-gray-600">التاريخ</label>
+                                    <p class="text-lg">${formatDate(booking.booking_date)}</p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-bold text-gray-600">الوقت</label>
+                                    <p class="text-lg font-mono">${booking.booking_time}</p>
+                                </div>
+                                ${booking.reason ? `
+                                <div class="col-span-2">
+                                    <label class="text-sm font-bold text-gray-600">السبب</label>
+                                    <p class="text-lg">${booking.reason}</p>
+                                </div>
+                                ` : ''}
+                                ${booking.notes ? `
+                                <div class="col-span-2">
+                                    <label class="text-sm font-bold text-gray-600">ملاحظات</label>
+                                    <p class="text-lg">${booking.notes}</p>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-6">
+                            <h3 class="font-bold text-lg mb-4">معلومات النظام</h3>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <label class="font-bold text-gray-600">تاريخ الإنشاء</label>
+                                    <p>${formatDateTime(booking.created_at)}</p>
+                                </div>
+                                ${booking.confirmed_at ? `
+                                <div>
+                                    <label class="font-bold text-gray-600">تاريخ التأكيد</label>
+                                    <p>${formatDateTime(booking.confirmed_at)}</p>
+                                </div>
+                                ` : ''}
+                                ${booking.cancelled_at ? `
+                                <div>
+                                    <label class="font-bold text-gray-600">تاريخ الإلغاء</label>
+                                    <p>${formatDateTime(booking.cancelled_at)}</p>
+                                </div>
+                                <div>
+                                    <label class="font-bold text-gray-600">سبب الإلغاء</label>
+                                    <p>${booking.cancellation_reason}</p>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 pt-6 border-t">
+                            <button onclick="confirmBooking(${booking.id})" class="flex-1 bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700">
+                                <i class="fas fa-check mr-2"></i>
+                                تأكيد الحجز
+                            </button>
+                            <button onclick="cancelBooking(${booking.id})" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700">
+                                <i class="fas fa-times mr-2"></i>
+                                إلغاء الحجز
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('booking-modal').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('View error:', error);
+                showToast('فشل تحميل التفاصيل', 'error');
+            }
+        }
+
+        // Confirm booking
+        async function confirmBooking(id) {
+            if (!confirm('هل تريد تأكيد هذا الحجز؟')) return;
+
+            try {
+                await axios.put(`/api/admin/bookings/${id}/status`, {
+                    status: 'confirmed'
+                });
+
+                showToast('تم تأكيد الحجز بنجاح');
+                closeModal();
+                loadBookings();
+
+            } catch (error) {
+                console.error('Confirm error:', error);
+                showToast('فشل تأكيد الحجز', 'error');
+            }
+        }
+
+        // Cancel booking
+        async function cancelBooking(id) {
+            const reason = prompt('يرجى إدخال سبب الإلغاء:');
+            if (!reason) return;
+
+            try {
+                await axios.put(`/api/admin/bookings/${id}/status`, {
+                    status: 'cancelled',
+                    cancellation_reason: reason
+                });
+
+                showToast('تم إلغاء الحجز');
+                closeModal();
+                loadBookings();
+
+            } catch (error) {
+                console.error('Cancel error:', error);
+                showToast('فشل إلغاء الحجز', 'error');
+            }
+        }
+
+        // Export bookings
+        async function exportBookings() {
+            const status = document.getElementById('filter-status').value;
+            const month = document.getElementById('filter-month').value;
+
+            let url = '/api/admin/bookings/export/csv?';
+            if (status) url += `status=${status}&`;
+            if (month) url += `month=${month}`;
+
+            window.open(url, '_blank');
+            showToast('جاري تحميل ملف Excel...');
+        }
+
+        // Pagination
+        function updatePagination(pagination) {
+            document.getElementById('pagination').classList.remove('hidden');
+            document.getElementById('pagination-showing').textContent = Math.min(pagination.offset + pagination.limit, pagination.total);
+            document.getElementById('pagination-total').textContent = pagination.total;
+            
+            document.getElementById('btn-prev').disabled = currentPage === 0;
+            document.getElementById('btn-next').disabled = !pagination.hasMore;
+            
+            totalBookings = pagination.total;
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                loadBookings();
+            }
+        }
+
+        function nextPage() {
+            currentPage++;
+            loadBookings();
+        }
+
+        // Helper functions
+        function getStatusBadge(status) {
+            const badges = {
+                pending: '<span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold">قيد الانتظار</span>',
+                confirmed: '<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">مؤكدة</span>',
+                cancelled: '<span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-bold">ملغاة</span>',
+                completed: '<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold">مكتملة</span>'
+            };
+            return badges[status] || status;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString('ar-EG');
+        }
+
+        function closeModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = type === 'success' ? 'fa-check-circle text-green-400' : 'fa-exclamation-circle text-red-400';
+            
+            toast.querySelector('i').className = `fas ${icon} text-xl`;
+            document.getElementById('toast-message').textContent = message;
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // Search with debounce
+        let searchTimeout;
+        document.getElementById('search-input').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(loadBookings, 500);
+        });
+
+        // Set default month to current month
+        const now = new Date();
+        const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        document.getElementById('filter-month').value = currentMonth;
+
+        // Initial load
+        loadBookings();
+    </script>
+</body>
+</html>

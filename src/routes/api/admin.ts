@@ -634,6 +634,343 @@ admin.delete('/articles/:articleId/images/:imageId', async (c) => {
 })
 
 // ============================================
+// BOOKINGS MANAGEMENT API
+// ============================================
+
+// Get all bookings with filters
+admin.get('/bookings', async (c) => {
+  try {
+    const { DB } = c.env
+    const status = c.req.query('status') // pending, confirmed, cancelled
+    const date = c.req.query('date') // YYYY-MM-DD
+    const month = c.req.query('month') // YYYY-MM
+    const limit = parseInt(c.req.query('limit') || '100')
+    const offset = parseInt(c.req.query('offset') || '0')
+    
+    let query = `SELECT * FROM bookings WHERE 1=1`
+    const params: any[] = []
+    
+    if (status) {
+      query += ` AND status = ?`
+      params.push(status)
+    }
+    
+    if (date) {
+      query += ` AND booking_date = ?`
+      params.push(date)
+    } else if (month) {
+      query += ` AND strftime('%Y-%m', booking_date) = ?`
+      params.push(month)
+    }
+    
+    query += ` ORDER BY booking_date DESC, booking_time DESC LIMIT ? OFFSET ?`
+    params.push(limit, offset)
+    
+    const { results } = await DB.prepare(query).bind(...params).all()
+    
+    // Get counts
+    let countQuery = `SELECT COUNT(*) as total FROM bookings WHERE 1=1`
+    const countParams: any[] = []
+    
+    if (status) {
+      countQuery += ` AND status = ?`
+      countParams.push(status)
+    }
+    
+    if (date) {
+      countQuery += ` AND booking_date = ?`
+      countParams.push(date)
+    } else if (month) {
+      countQuery += ` AND strftime('%Y-%m', booking_date) = ?`
+      countParams.push(month)
+    }
+    
+    const { total } = await DB.prepare(countQuery).bind(...countParams).first() as { total: number }
+
+    return c.json({
+      success: true,
+      bookings: results,
+      pagination: {
+        total,
+        limit,
+        offset,
+        hasMore: offset + limit < total
+      }
+    })
+  } catch (error) {
+    console.error('Get bookings error:', error)
+    return c.json({ error: 'Failed to fetch bookings' }, 500)
+  }
+})
+
+// Get booking statistics
+admin.get('/bookings/stats', async (c) => {
+  try {
+    const { DB } = c.env
+    const month = c.req.query('month') // YYYY-MM or 'all'
+    
+    let dateFilter = ''
+    const params: any[] = []
+    
+    if (month && month !== 'all') {
+      dateFilter = ` WHERE strftime('%Y-%m', booking_date) = ?`
+      params.push(month)
+    }
+    
+    // Get status counts
+    const statusQuery = `
+      SELECT 
+        status,
+        COUNT(*) as count
+      FROM bookings
+      ${dateFilter}
+      GROUP BY status
+    `
+    
+    const { results: statusCounts } = await DB.prepare(statusQuery).bind(...params).all()
+    
+    // Get total bookings
+    const totalQuery = `SELECT COUNT(*) as total FROM bookings${dateFilter}`
+    const { total } = await DB.prepare(totalQuery).bind(...params).first() as { total: number }
+    
+    // Get today's bookings
+    const todayQuery = `
+      SELECT COUNT(*) as today
+      FROM bookings
+      WHERE booking_date = date('now')
+    `
+    const { today } = await DB.prepare(todayQuery).first() as { today: number }
+    
+    // Get upcoming bookings (next 7 days)
+    const upcomingQuery = `
+      SELECT COUNT(*) as upcoming
+      FROM bookings
+      WHERE booking_date >= date('now')
+        AND booking_date <= date('now', '+7 days')
+        AND status IN ('pending', 'confirmed')
+    `
+    const { upcoming } = await DB.prepare(upcomingQuery).first() as { upcoming: number }
+
+    return c.json({
+      success: true,
+      stats: {
+        total,
+        today,
+        upcoming,
+        byStatus: statusCounts
+      }
+    })
+  } catch (error) {
+    console.error('Get stats error:', error)
+    return c.json({ error: 'Failed to fetch statistics' }, 500)
+  }
+})
+
+// Get single booking
+admin.get('/bookings/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+
+    const booking = await DB.prepare(`
+      SELECT * FROM bookings WHERE id = ?
+    `).bind(id).first()
+
+    if (!booking) {
+      return c.json({ error: 'Booking not found' }, 404)
+    }
+
+    return c.json({ success: true, booking })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch booking' }, 500)
+  }
+})
+
+// Update booking status
+admin.put('/bookings/:id/status', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+    const { status, notes, cancellation_reason } = await c.req.json()
+
+    if (!['pending', 'confirmed', 'cancelled', 'completed'].includes(status)) {
+      return c.json({ error: 'Invalid status' }, 400)
+    }
+
+    let updateQuery = `
+      UPDATE bookings 
+      SET status = ?, updated_at = CURRENT_TIMESTAMP
+    `
+    const params: any[] = [status]
+
+    if (status === 'confirmed') {
+      updateQuery += `, confirmed_at = CURRENT_TIMESTAMP, confirmed_by = ?`
+      params.push(1) // Admin user ID
+    } else if (status === 'cancelled' && cancellation_reason) {
+      updateQuery += `, cancelled_at = CURRENT_TIMESTAMP, cancellation_reason = ?`
+      params.push(cancellation_reason)
+    }
+
+    if (notes) {
+      updateQuery += `, notes = ?`
+      params.push(notes)
+    }
+
+    updateQuery += ` WHERE id = ?`
+    params.push(id)
+
+    await DB.prepare(updateQuery).bind(...params).run()
+
+    return c.json({
+      success: true,
+      message: 'Booking status updated successfully'
+    })
+  } catch (error) {
+    console.error('Update status error:', error)
+    return c.json({ error: 'Failed to update booking status' }, 500)
+  }
+})
+
+// Update booking details
+admin.put('/bookings/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+    const {
+      patient_name,
+      patient_phone,
+      patient_email,
+      booking_date,
+      booking_time,
+      notes
+    } = await c.req.json()
+
+    await DB.prepare(`
+      UPDATE bookings 
+      SET 
+        patient_name = ?,
+        patient_phone = ?,
+        patient_email = ?,
+        booking_date = ?,
+        booking_time = ?,
+        notes = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(
+      patient_name,
+      patient_phone,
+      patient_email || '',
+      booking_date,
+      booking_time,
+      notes || '',
+      id
+    ).run()
+
+    return c.json({
+      success: true,
+      message: 'Booking updated successfully'
+    })
+  } catch (error) {
+    console.error('Update booking error:', error)
+    return c.json({ error: 'Failed to update booking' }, 500)
+  }
+})
+
+// Delete booking
+admin.delete('/bookings/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+
+    await DB.prepare(`
+      DELETE FROM bookings WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({
+      success: true,
+      message: 'Booking deleted successfully'
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to delete booking' }, 500)
+  }
+})
+
+// Export bookings to CSV
+admin.get('/bookings/export/csv', async (c) => {
+  try {
+    const { DB } = c.env
+    const status = c.req.query('status')
+    const month = c.req.query('month')
+    
+    let query = `SELECT * FROM bookings WHERE 1=1`
+    const params: any[] = []
+    
+    if (status) {
+      query += ` AND status = ?`
+      params.push(status)
+    }
+    
+    if (month) {
+      query += ` AND strftime('%Y-%m', booking_date) = ?`
+      params.push(month)
+    }
+    
+    query += ` ORDER BY booking_date DESC, booking_time DESC`
+    
+    const { results } = await DB.prepare(query).bind(...params).all()
+    
+    // Generate CSV
+    const headers = [
+      'رقم الحجز',
+      'اسم المريض',
+      'رقم الجوال',
+      'البريد الإلكتروني',
+      'التاريخ',
+      'الوقت',
+      'نوع الاستشارة',
+      'السبب',
+      'الحالة',
+      'ملاحظات',
+      'تاريخ الإنشاء'
+    ]
+    
+    const csvRows = [headers.join(',')]
+    
+    for (const booking of results as any[]) {
+      const row = [
+        booking.booking_number,
+        booking.patient_name,
+        booking.patient_phone,
+        booking.patient_email || '',
+        booking.booking_date,
+        booking.booking_time,
+        booking.consultation_type_ar || booking.consultation_type_en || '',
+        (booking.reason || '').replace(/,/g, ';'),
+        booking.status,
+        (booking.notes || '').replace(/,/g, ';'),
+        booking.created_at
+      ]
+      csvRows.push(row.map(field => `"${field}"`).join(','))
+    }
+    
+    const csv = csvRows.join('\n')
+    
+    // Add BOM for proper UTF-8 encoding in Excel
+    const bom = '\uFEFF'
+    
+    return new Response(bom + csv, {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="bookings-${month || 'all'}-${Date.now()}.csv"`
+      }
+    })
+  } catch (error) {
+    console.error('Export CSV error:', error)
+    return c.json({ error: 'Failed to export bookings' }, 500)
+  }
+})
+
+// ============================================
 // HELPER FUNCTIONS
 // ============================================
 
