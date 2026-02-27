@@ -109,7 +109,7 @@ aboutPage.get('/', (c) => {
                             <i class="fab fa-whatsapp"></i>
                             ${lang === 'ar' ? 'واتساب' : 'WhatsApp'}
                         </a>
-                        <a href="tel:+966XXXXXXXXX" class="bg-blue-800 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-900 transition inline-flex items-center gap-2">
+                        <a href="tel:+966127444444" class="bg-blue-800 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-900 transition inline-flex items-center gap-2">
                             <i class="fas fa-phone"></i>
                             ${lang === 'ar' ? 'اتصل الآن' : 'Call Now'}
                         </a>
