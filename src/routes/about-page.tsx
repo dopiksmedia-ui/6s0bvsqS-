@@ -16,8 +16,8 @@ aboutPage.get('/', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'} - Dr. Ahmed Al-Shareef</title>
-    <meta name="description" content="${lang === 'ar' ? 'تعرف على د. أحمد محمد الشريف - استشاري جراحة عامة ومناظير بخبرة تمتد لأكثر من 15 عاماً' : 'Meet Dr. Ahmed Mohammed Al-Shareef - Consultant General & Laparoscopic Surgeon with over 15 years of experience'}">
+    <title>${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'} - Dr. Mohammed Saeed</title>
+    <meta name="description" content="${lang === 'ar' ? 'تعرف على د. محمد سعيد ابن محسن علي - استشاري جراحة القولون والمستقيم مع خبرة بريطانية متميزة' : 'Meet Dr. Mohammed Saeed bin Mohsen Ali - Consultant Colorectal Surgeon with distinguished British experience'}">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
@@ -64,7 +64,7 @@ aboutPage.get('/', (c) => {
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a href="/" class="text-2xl font-bold text-blue-600">
-                    ${lang === 'ar' ? 'د. أحمد الشريف' : 'Dr. Ahmed Al-Shareef'}
+                    ${lang === 'ar' ? 'د. محمد سعيد' : 'Dr. Mohammed Saeed'}
                 </a>
                 <div class="flex gap-6 items-center">
                     <a href="/" class="text-gray-600 hover:text-blue-600 transition">
@@ -89,13 +89,13 @@ aboutPage.get('/', (c) => {
                 <div class="relative" data-aos="fade-right">
                     <div class="relative z-10">
                         <img 
-                            src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=600&fit=crop" 
-                            alt="Dr. Ahmed Al-Shareef" 
+                            src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&h=600&fit=crop" 
+                            alt="Dr. Mohammed Saeed" 
                             class="rounded-2xl shadow-2xl w-full max-w-md mx-auto"
                         >
                         <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 bg-white text-blue-600 px-8 py-4 rounded-xl shadow-lg">
-                            <div class="text-3xl font-bold">15+</div>
-                            <div class="text-sm">${lang === 'ar' ? 'سنة خبرة' : 'Years Experience'}</div>
+                            <div class="text-3xl font-bold">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
+                            <div class="text-sm">${lang === 'ar' ? 'خبرة متميزة' : 'Distinguished Experience'}</div>
                         </div>
                     </div>
                 </div>
@@ -103,17 +103,17 @@ aboutPage.get('/', (c) => {
                 <!-- Doctor Info -->
                 <div data-aos="fade-left">
                     <h1 class="text-5xl font-bold mb-4">
-                        ${lang === 'ar' ? 'د. أحمد محمد الشريف' : 'Dr. Ahmed Mohammed Al-Shareef'}
+                        ${lang === 'ar' ? 'د. محمد سعيد ابن محسن علي' : 'Dr. Mohammed Saeed bin Mohsen Ali'}
                     </h1>
                     <p class="text-2xl text-blue-200 mb-6">
                         ${lang === 'ar' 
-                            ? 'استشاري جراحة عامة ومناظير | زمالة البورد الأمريكي FACS' 
-                            : 'Consultant General & Laparoscopic Surgeon | FACS'}
+                            ? 'استشاري جراحة القولون والمستقيم' 
+                            : 'Consultant Colorectal Surgeon'}
                     </p>
                     <p class="text-lg text-blue-100 leading-relaxed mb-8">
                         ${lang === 'ar'
-                            ? 'خبرة واسعة تمتد لأكثر من 15 عاماً في مجال الجراحة العامة وجراحة المناظير المتقدمة، مع سجل حافل بالنجاحات والإنجازات الطبية المتميزة.'
-                            : 'Extensive experience spanning over 15 years in general surgery and advanced laparoscopic procedures, with an outstanding record of medical successes and achievements.'}
+                            ? 'خبرة بريطانية متميزة في جراحات القولون والمستقيم والبواسير والنواسير، مع تقنيات حديثة في الجراحة بالمناظير والروبوت لتحقيق أفضل النتائج بأقل تدخل جراحي.'
+                            : 'Distinguished British experience in colorectal surgery, hemorrhoids and fistulas, with modern techniques in laparoscopic and robotic surgery to achieve the best results with minimal surgical intervention.'}
                     </p>
                     
                     <!-- Quick Contact Buttons -->
@@ -141,20 +141,20 @@ aboutPage.get('/', (c) => {
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div class="stat-card bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
-                    <div class="text-5xl font-bold text-blue-600 mb-2">15+</div>
-                    <div class="text-gray-700">${lang === 'ar' ? 'سنة خبرة' : 'Years Experience'}</div>
+                    <div class="text-5xl font-bold text-blue-600 mb-2">3</div>
+                    <div class="text-gray-700">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
                 </div>
                 <div class="stat-card bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center">
-                    <div class="text-5xl font-bold text-green-600 mb-2">5,000+</div>
-                    <div class="text-gray-700">${lang === 'ar' ? 'عملية جراحية' : 'Surgeries'}</div>
+                    <div class="text-5xl font-bold text-green-600 mb-2">10+</div>
+                    <div class="text-gray-700">${lang === 'ar' ? 'خدمات علاجية' : 'Medical Services'}</div>
                 </div>
                 <div class="stat-card bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl text-center">
                     <div class="text-5xl font-bold text-purple-600 mb-2">98%</div>
                     <div class="text-gray-700">${lang === 'ar' ? 'رضا المرضى' : 'Patient Satisfaction'}</div>
                 </div>
                 <div class="stat-card bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center">
-                    <div class="text-5xl font-bold text-orange-600 mb-2">25+</div>
-                    <div class="text-gray-700">${lang === 'ar' ? 'شهادة واعتماد' : 'Certifications'}</div>
+                    <div class="text-5xl font-bold text-orange-600 mb-2">${lang === 'ar' ? 'متقدمة' : 'Advanced'}</div>
+                    <div class="text-gray-700">${lang === 'ar' ? 'تقنيات حديثة' : 'Modern Techniques'}</div>
                 </div>
             </div>
         </div>
@@ -171,69 +171,80 @@ aboutPage.get('/', (c) => {
                 <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
                     <p class="text-xl text-gray-800 font-semibold">
                         ${lang === 'ar'
-                            ? 'الدكتور أحمد محمد الشريف هو استشاري جراحة عامة ومناظير متميز، يجمع بين الخبرة الطويلة والمهارات الجراحية المتقدمة.'
-                            : 'Dr. Ahmed Mohammed Al-Shareef is a distinguished consultant in general and laparoscopic surgery, combining extensive experience with advanced surgical skills.'}
+                            ? 'يُعد الدكتور محمد سعيد ابن محسن علي استشاري جراحة القولون والمستقيم من الأسماء المتميزة في مجال الجراحات المتقدمة، حيث يجمع بين الخبرة البريطانية والتقنيات الحديثة في علاج أمراض القولون والمستقيم والبواسير والنواسير.'
+                            : 'Dr. Mohammed Saeed bin Mohsen Ali, Consultant Colorectal Surgeon, is a distinguished name in advanced surgery, combining British experience with modern techniques in treating colon, rectal, hemorrhoid and fistula diseases.'}
                     </p>
                     
                     <p>
                         ${lang === 'ar'
-                            ? 'تخرج د. أحمد من كلية الطب جامعة الملك سعود بتفوق، ثم أكمل تدريبه التخصصي في الجراحة العامة في مستشفيات مرموقة بالمملكة العربية السعودية. حصل على زمالة البورد الأمريكي في الجراحة العامة (FACS) من الكلية الأمريكية للجراحين، وهو ما يعكس التزامه بأعلى معايير التميز الطبي.'
-                            : 'Dr. Ahmed graduated with distinction from King Saud University College of Medicine, then completed his specialized training in general surgery at prestigious hospitals in Saudi Arabia. He obtained a fellowship from the American Board of Surgery (FACS) from the American College of Surgeons, reflecting his commitment to the highest standards of medical excellence.'}
+                            ? 'حصل الدكتور على زمالات تخصصية دقيقة من كبرى المستشفيات في المملكة المتحدة، ويعتمد في ممارسته على أحدث أساليب الجراحة بالمناظير والروبوت لتحقيق أفضل النتائج العلاجية بأقل تدخل جراحي ممكن.'
+                            : 'Dr. Mohammed obtained specialized fellowships from major hospitals in the United Kingdom, and relies in his practice on the latest laparoscopic and robotic surgery methods to achieve the best therapeutic results with minimal surgical intervention.'}
                     </p>
 
                     <p>
                         ${lang === 'ar'
-                            ? 'خلال مسيرته المهنية التي امتدت لأكثر من 15 عاماً، أجرى د. أحمد أكثر من 5,000 عملية جراحية ناجحة، تنوعت بين العمليات التقليدية والمناظير المتقدمة. يتخصص في جراحات السمنة، المرارة، الفتق، الزائدة الدودية، والجراحات الطارئة.'
-                            : 'Throughout his 15+ year career, Dr. Ahmed has performed over 5,000 successful surgeries, ranging from traditional operations to advanced laparoscopic procedures. He specializes in bariatric surgery, gallbladder, hernia, appendix, and emergency surgeries.'}
+                            ? 'يقدم الدكتور محمد سعيد مجموعة متكاملة من خدمات جراحة القولون والمستقيم، تشمل علاج أورام القولون والمستقيم السرطانية، جراحات القولون والمستقيم بالروبوت، الجراحات العامة وجراحات المناظير المتقدمة، وجراحات البواسير والنواسير المتقدمة.'
+                            : 'Dr. Mohammed Saeed provides a comprehensive range of colorectal surgery services, including treatment of colorectal cancer tumors, robotic colorectal surgeries, general surgeries and advanced laparoscopic surgeries, and advanced hemorrhoid and fistula surgeries.'}
                     </p>
 
                     <p>
                         ${lang === 'ar'
-                            ? 'يؤمن د. أحمد بأن كل مريض يستحق رعاية طبية شخصية ومتميزة، ولذلك يحرص على متابعة مرضاه بدقة من قبل وأثناء وبعد العملية. فلسفته في العلاج تقوم على الاستماع الجيد للمريض، التشخيص الدقيق، والتوعية الشاملة حول الخيارات العلاجية المتاحة.'
-                            : 'Dr. Ahmed believes that every patient deserves personalized and distinguished medical care. Therefore, he carefully follows up with his patients before, during, and after surgery. His treatment philosophy is based on active listening to patients, accurate diagnosis, and comprehensive education about available treatment options.'}
+                            ? 'يعتمد الدكتور على نهج طبي حديث يركز على التشخيص الدقيق، تقليل التدخل الجراحي قدر الإمكان، استخدام جراحات المناظير والروبوت، تسريع التعافي وتقليل الألم، مع تقديم رعاية إنسانية شاملة للمريض.'
+                            : 'Dr. Mohammed follows a modern medical approach focusing on accurate diagnosis, minimizing surgical intervention as much as possible, using laparoscopic and robotic surgeries, speeding recovery and reducing pain, while providing comprehensive humane patient care.'}
                     </p>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-6 my-6 rounded">
+                        <h4 class="font-bold text-gray-800 mb-2 text-lg">
+                            ${lang === 'ar' ? '🎯 الفئة العمرية المستقبلة' : '🎯 Age Group Accepted'}
+                        </h4>
+                        <p class="text-gray-700">
+                            ${lang === 'ar'
+                                ? '• في العيادة: من عمر 15 سنة<br>• في الحالات الطارئة: من عمر 7 سنوات فما فوق'
+                                : '• In clinic: From age 15 years<br>• In emergency cases: From age 7 years and above'}
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Qualifications & Certifications -->
                 <div class="mt-12">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                        ${lang === 'ar' ? 'المؤهلات والشهادات' : 'Qualifications & Certifications'}
+                        ${lang === 'ar' ? 'الزمالات والتأهيل العلمي' : 'Fellowships & Academic Qualifications'}
                     </h3>
                     <div class="grid md:grid-cols-2 gap-4">
                         <div class="qualification-badge text-white p-4 rounded-lg">
-                            <i class="fas fa-graduation-cap text-2xl mb-2"></i>
+                            <i class="fas fa-hospital text-2xl mb-2"></i>
                             <div class="font-semibold">
-                                ${lang === 'ar' ? 'بكالوريوس الطب والجراحة' : 'MBBS'}
+                                ${lang === 'ar' ? 'زمالة مستشفى سانت مارك - لندن' : 'St Mark\'s Hospital Fellowship - London'}
                             </div>
                             <div class="text-sm opacity-90">
-                                ${lang === 'ar' ? 'جامعة الملك سعود' : 'King Saud University'}
+                                ${lang === 'ar' ? 'جراحة القولون والمستقيم' : 'Colorectal Surgery'}
                             </div>
                         </div>
                         <div class="qualification-badge text-white p-4 rounded-lg">
-                            <i class="fas fa-award text-2xl mb-2"></i>
+                            <i class="fas fa-hospital-user text-2xl mb-2"></i>
                             <div class="font-semibold">
-                                ${lang === 'ar' ? 'زمالة البورد الأمريكي (FACS)' : 'FACS Fellowship'}
+                                ${lang === 'ar' ? 'زمالة مستشفى نورفولك ونوريتش' : 'Norfolk & Norwich Hospital Fellowship'}
                             </div>
                             <div class="text-sm opacity-90">
-                                ${lang === 'ar' ? 'الكلية الأمريكية للجراحين' : 'American College of Surgeons'}
+                                ${lang === 'ar' ? 'جراحة القولون والمستقيم وجراحة الطوارئ' : 'Colorectal & Emergency Surgery'}
                             </div>
                         </div>
                         <div class="qualification-badge text-white p-4 rounded-lg">
-                            <i class="fas fa-certificate text-2xl mb-2"></i>
+                            <i class="fas fa-robot text-2xl mb-2"></i>
                             <div class="font-semibold">
-                                ${lang === 'ar' ? 'البورد السعودي - جراحة عامة' : 'Saudi Board - General Surgery'}
+                                ${lang === 'ar' ? 'زمالة مستشفى نورفولك ونوريتش' : 'Norfolk & Norwich Hospital Fellowship'}
                             </div>
                             <div class="text-sm opacity-90">
-                                ${lang === 'ar' ? 'الهيئة السعودية للتخصصات الصحية' : 'Saudi Commission for Health Specialties'}
+                                ${lang === 'ar' ? 'جراحات الروبوت والمناظير' : 'Robotic & Laparoscopic Surgery'}
                             </div>
                         </div>
                         <div class="qualification-badge text-white p-4 rounded-lg">
-                            <i class="fas fa-microscope text-2xl mb-2"></i>
+                            <i class="fas fa-flag-checkered text-2xl mb-2"></i>
                             <div class="font-semibold">
-                                ${lang === 'ar' ? 'زمالة جراحة المناظير المتقدمة' : 'Advanced Laparoscopy Fellowship'}
+                                ${lang === 'ar' ? 'خبرة بريطانية متميزة' : 'Distinguished UK Experience'}
                             </div>
                             <div class="text-sm opacity-90">
-                                ${lang === 'ar' ? 'جامعة هارفارد - الولايات المتحدة' : 'Harvard University - USA'}
+                                ${lang === 'ar' ? 'أفضل المستشفيات البريطانية' : 'Top British Hospitals'}
                             </div>
                         </div>
                     </div>
@@ -242,18 +253,22 @@ aboutPage.get('/', (c) => {
                 <!-- Specializations -->
                 <div class="mt-12">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">
-                        ${lang === 'ar' ? 'التخصصات الطبية' : 'Medical Specializations'}
+                        ${lang === 'ar' ? 'التخصصات والخدمات العلاجية' : 'Specializations & Medical Services'}
                     </h3>
                     <div class="grid md:grid-cols-2 gap-4">
                         ${[
-                            { ar: 'جراحات السمنة والمناظير', en: 'Bariatric & Laparoscopic Surgery', icon: 'fa-weight-scale' },
-                            { ar: 'جراحة المرارة بالمنظار', en: 'Laparoscopic Cholecystectomy', icon: 'fa-hospital' },
-                            { ar: 'جراحة الفتق (الفتاق)', en: 'Hernia Surgery', icon: 'fa-user-doctor' },
-                            { ar: 'جراحة الزائدة الدودية', en: 'Appendectomy', icon: 'fa-syringe' },
-                            { ar: 'جراحات الطوارئ', en: 'Emergency Surgery', icon: 'fa-truck-medical' },
-                            { ar: 'جراحات القولون والمستقيم', en: 'Colorectal Surgery', icon: 'fa-notes-medical' }
+                            { ar: 'علاج أورام القولون والمستقيم السرطانية', en: 'Treatment of Colorectal Cancer Tumors', icon: 'fa-ribbon' },
+                            { ar: 'جراحات القولون والمستقيم بالروبوت', en: 'Robotic Colorectal Surgery', icon: 'fa-robot' },
+                            { ar: 'الجراحات العامة وجراحات المناظير المتقدمة', en: 'General & Advanced Laparoscopic Surgery', icon: 'fa-hospital' },
+                            { ar: 'جراحات البواسير والنواسير المتقدمة', en: 'Advanced Hemorrhoid & Fistula Surgery', icon: 'fa-user-doctor' },
+                            { ar: 'علاج الشرخ الشرجي بحقن البوتكس', en: 'Anal Fissure Treatment with Botox', icon: 'fa-syringe' },
+                            { ar: 'جراحة الناسور العصعصي', en: 'Pilonidal Sinus Surgery', icon: 'fa-notes-medical' },
+                            { ar: 'الجراحة داخل المستقيم عبر فتحة الشرج', en: 'TAMIS - Transanal Minimally Invasive Surgery', icon: 'fa-microscope' },
+                            { ar: 'جراحة إصلاح هبوط المستقيم وعضلات الحوض', en: 'Rectal Prolapse & Pelvic Floor Repair', icon: 'fa-heartbeat' },
+                            { ar: 'جراحات المرارة والفتق', en: 'Gallbladder & Hernia Surgery', icon: 'fa-hospital-user' },
+                            { ar: 'مناظير القولون والمستقيم التشخيصية والعلاجية', en: 'Diagnostic & Therapeutic Colonoscopy', icon: 'fa-stethoscope' }
                         ].map(spec => `
-                            <div class="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex items-center gap-3 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
                                 <i class="fas ${spec.icon} text-2xl text-blue-600"></i>
                                 <span class="font-medium text-gray-800">${lang === 'ar' ? spec.ar : spec.en}</span>
                             </div>
@@ -282,16 +297,16 @@ aboutPage.get('/', (c) => {
                     </div>
                     <p class="text-lg mb-6 leading-relaxed">
                         "${lang === 'ar' 
-                            ? 'تجربة ممتازة من البداية للنهاية. د. أحمد طبيب محترف جداً ويهتم بتفاصيل حالة المريض. العملية كانت ناجحة ولم أشعر بأي ألم بعدها. أنصح بشدة!'
-                            : 'Excellent experience from start to finish. Dr. Ahmed is a very professional doctor who cares about patient details. The surgery was successful and I felt no pain afterward. Highly recommended!'}"
+                            ? 'الحمد لله على نجاح العملية. د. محمد طبيب ماهر جداً وخبير في جراحات القولون. أجرى لي عملية بالروبوت وكانت النتائج ممتازة. الألم كان قليل جداً والتعافي سريع. شكراً دكتور!'
+                            : 'Thank God for the successful surgery. Dr. Mohammed is a very skilled doctor and expert in colorectal surgery. He performed robotic surgery for me and the results were excellent. Pain was minimal and recovery was quick. Thank you doctor!'}"
                     </p>
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-blue-300 rounded-full flex items-center justify-center">
                             <i class="fas fa-user text-blue-800"></i>
                         </div>
                         <div>
-                            <div class="font-semibold">${lang === 'ar' ? 'محمد العتيبي' : 'Mohammed Al-Otaibi'}</div>
-                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'جراحة المرارة' : 'Gallbladder Surgery'}</div>
+                            <div class="font-semibold">${lang === 'ar' ? 'عبدالله الشمري' : 'Abdullah Al-Shammari'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'جراحة القولون بالروبوت' : 'Robotic Colorectal Surgery'}</div>
                         </div>
                     </div>
                 </div>
@@ -303,16 +318,16 @@ aboutPage.get('/', (c) => {
                     </div>
                     <p class="text-lg mb-6 leading-relaxed">
                         "${lang === 'ar'
-                            ? 'كنت خائفة جداً من العملية لكن د. أحمد طمأنني وشرح لي كل شيء بوضوح. الفريق الطبي رائع والمتابعة بعد العملية كانت ممتازة. شكراً جزيلاً!'
-                            : 'I was very scared of the surgery but Dr. Ahmed reassured me and explained everything clearly. The medical team is wonderful and the post-operative follow-up was excellent. Thank you so much!'}"
+                            ? 'عانيت من مشكلة البواسير لسنوات طويلة. د. محمد عالجني بأحدث التقنيات وبدون ألم يذكر. الآن أنا أحسن بكثير. أنصح به بشدة لكل من يعاني من مشاكل مماثلة.'
+                            : 'I suffered from hemorrhoids for many years. Dr. Mohammed treated me with the latest techniques with minimal pain. Now I am much better. I highly recommend him to anyone suffering from similar problems.'}"
                     </p>
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-pink-300 rounded-full flex items-center justify-center">
                             <i class="fas fa-user text-pink-800"></i>
                         </div>
                         <div>
-                            <div class="font-semibold">${lang === 'ar' ? 'نورة السهلي' : 'Noura Al-Sahli'}</div>
-                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'جراحة الفتق' : 'Hernia Surgery'}</div>
+                            <div class="font-semibold">${lang === 'ar' ? 'سارة القحطاني' : 'Sarah Al-Qahtani'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'علاج البواسير' : 'Hemorrhoid Treatment'}</div>
                         </div>
                     </div>
                 </div>
@@ -324,16 +339,16 @@ aboutPage.get('/', (c) => {
                     </div>
                     <p class="text-lg mb-6 leading-relaxed">
                         "${lang === 'ar'
-                            ? 'أفضل طبيب جراح قابلته في حياتي. مهني، صبور، ويشرح كل شيء بطريقة مفهومة. العملية كانت بالمنظار وكانت سريعة وناجحة. الله يعطيه العافية!'
-                            : 'The best surgeon I have ever met. Professional, patient, and explains everything in an understandable way. The laparoscopic surgery was quick and successful. May God give him health!'}"
+                            ? 'تجربتي مع د. محمد كانت رائعة من البداية للنهاية. شخص الحالة بدقة وأجرى لي منظار علاجي ناجح. ما شاء الله عليه، يشرح كل شيء بوضوح ويطمئن المريض. الله يجزاه خير!'
+                            : 'My experience with Dr. Mohammed was wonderful from start to finish. He diagnosed the condition accurately and performed a successful therapeutic endoscopy. He explains everything clearly and reassures the patient. May God reward him!'}"
                     </p>
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-green-300 rounded-full flex items-center justify-center">
                             <i class="fas fa-user text-green-800"></i>
                         </div>
                         <div>
-                            <div class="font-semibold">${lang === 'ar' ? 'خالد المطيري' : 'Khaled Al-Mutairi'}</div>
-                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'جراحة الزائدة' : 'Appendix Surgery'}</div>
+                            <div class="font-semibold">${lang === 'ar' ? 'فهد المالكي' : 'Fahd Al-Malki'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'منظار القولون العلاجي' : 'Therapeutic Colonoscopy'}</div>
                         </div>
                     </div>
                 </div>
