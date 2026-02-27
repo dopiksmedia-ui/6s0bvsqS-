@@ -12,6 +12,8 @@ import bookingPageRoutes from './routes/booking-page';
 import aboutPageRoutes from './routes/about-page';
 import homePageRoutes from './routes/home-page';
 import contactPageRoutes from './routes/contact-page';
+import articlesPageRoutes from './routes/articles-page';
+import articleSinglePageRoutes from './routes/article-single-page';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -31,6 +33,8 @@ app.route('/', homePageRoutes);
 app.route('/booking', bookingPageRoutes);
 app.route('/about', aboutPageRoutes);
 app.route('/contact', contactPageRoutes);
+app.route('/articles', articlesPageRoutes);
+app.route('/articles', articleSinglePageRoutes);
 
 // API Routes
 app.route('/api/doctor', doctorRoutes);
