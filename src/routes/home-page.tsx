@@ -206,67 +206,87 @@ homePage.get('/', (c) => {
     </div>
 
     <script>
-        // YouTube Channel ID (extracted from @dr.mohammedsaeedali)
-        const CHANNEL_HANDLE = '@dr.mohammedsaeedali';
+        // YouTube Channel configuration
+        const CHANNEL_HANDLE = '@Dr.MohammedSaeedAli';
         const VIDEOS_PER_PAGE = 4;
         let currentPage = 0;
         let allVideos = [];
 
-        // Sample videos (fallback if API is not available)
-        const sampleVideos = [
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'نصائح للوقاية من سرطان القولون' : 'Tips for Colon Cancer Prevention'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'فيديو توعوي حول أهمية الكشف المبكر' : 'Educational video about early detection importance'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'الجراحة الروبوتية في علاج القولون' : 'Robotic Surgery in Colorectal Treatment'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'شرح تقنيات الجراحة الحديثة' : 'Explanation of modern surgical techniques'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'أسئلة شائعة حول أمراض القولون' : 'Common Questions About Colorectal Diseases'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'إجابات عن أكثر الأسئلة شيوعاً' : 'Answers to most common questions'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'نمط حياة صحي للوقاية من البواسير' : 'Healthy Lifestyle for Hemorrhoid Prevention'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'نصائح عملية للحياة اليومية' : 'Practical tips for daily life'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'متى يجب زيارة الطبيب؟' : 'When Should You Visit a Doctor?'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'علامات تستوجب الفحص الطبي' : 'Signs requiring medical examination'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'التغذية السليمة لصحة القولون' : 'Proper Nutrition for Colon Health'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'أطعمة مفيدة وأخرى يجب تجنبها' : 'Beneficial foods and what to avoid'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'منظار القولون: ماذا تتوقع؟' : 'Colonoscopy: What to Expect?'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'دليل شامل للتحضير والإجراء' : 'Comprehensive guide for preparation and procedure'}'
-            },
-            {
-                id: 'dQw4w9WgXcQ',
-                title: '${lang === 'ar' ? 'قصص نجاح المرضى' : 'Patient Success Stories'}',
-                thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-                description: '${lang === 'ar' ? 'تجارب إيجابية للشفاء' : 'Positive recovery experiences'}'
+        // Fetch videos from API
+        async function fetchVideos() {
+            try {
+                const response = await fetch('/api/youtube/videos');
+                const data = await response.json();
+                
+                if (data.success && data.videos && data.videos.length > 0) {
+                    allVideos = data.videos;
+                    console.log('Loaded', allVideos.length, 'videos from', data.source);
+                } else {
+                    console.warn('No videos found, using fallback');
+                    allVideos = getFallbackVideos();
+                }
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+                allVideos = getFallbackVideos();
             }
-        ];
+            
+            // Load first page
+            loadVideos();
+        }
 
-        // Initialize videos
-        allVideos = sampleVideos;
-        loadVideos();
+        // Fallback videos (in case API fails)
+        function getFallbackVideos() {
+            return [
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'نصائح للوقاية من سرطان القولون' : 'Tips for Colon Cancer Prevention'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'فيديو توعوي حول أهمية الكشف المبكر' : 'Educational video about early detection importance'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'الجراحة الروبوتية في علاج القولون' : 'Robotic Surgery in Colorectal Treatment'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'شرح تقنيات الجراحة الحديثة' : 'Explanation of modern surgical techniques'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'أسئلة شائعة حول أمراض القولون' : 'Common Questions About Colorectal Diseases'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'إجابات عن أكثر الأسئلة شيوعاً' : 'Answers to most common questions'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'نمط حياة صحي للوقاية من البواسير' : 'Healthy Lifestyle for Hemorrhoid Prevention'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'نصائح عملية للحياة اليومية' : 'Practical tips for daily life'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'متى يجب زيارة الطبيب؟' : 'When Should You Visit a Doctor?'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'علامات تستوجب الفحص الطبي' : 'Signs requiring medical examination'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'التغذية السليمة لصحة القولون' : 'Proper Nutrition for Colon Health'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'أطعمة مفيدة وأخرى يجب تجنبها' : 'Beneficial foods and what to avoid'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'منظار القولون: ماذا تتوقع؟' : 'Colonoscopy: What to Expect?'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'دليل شامل للتحضير والإجراء' : 'Comprehensive guide for preparation and procedure'}'
+                },
+                {
+                    id: 'dQw4w9WgXcQ',
+                    title: '${lang === 'ar' ? 'قصص نجاح المرضى' : 'Patient Success Stories'}',
+                    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+                    description: '${lang === 'ar' ? 'تجارب إيجابية للشفاء' : 'Positive recovery experiences'}'
+                }
+            ];
+        }
 
         function loadVideos() {
             const start = currentPage * VIDEOS_PER_PAGE;
@@ -364,6 +384,9 @@ homePage.get('/', (c) => {
                 closeVideoModal();
             }
         });
+
+        // Fetch videos on page load
+        fetchVideos();
     </script>
 
     <!-- Services CTA -->

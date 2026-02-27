@@ -14,6 +14,7 @@ import homePageRoutes from './routes/home-page';
 import contactPageRoutes from './routes/contact-page';
 import articlesPageRoutes from './routes/articles-page';
 import articleSinglePageRoutes from './routes/article-single-page';
+import youtubeApiRoutes from './routes/api/youtube';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -40,6 +41,7 @@ app.route('/articles', articleSinglePageRoutes);
 app.route('/api/doctor', doctorRoutes);
 app.route('/api/articles', articlesRoutes);
 app.route('/api/booking', bookingRoutes);
+app.route('/api/youtube', youtubeApiRoutes);
 
 app.get('/api/health', (c) => {
   return c.json({
