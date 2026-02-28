@@ -268,7 +268,23 @@
                     </div>
                     
                     <!-- Quick Links -->
-                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Home Page Image (NEW) -->
+                        <div class="bg-gradient-to-br from-indigo-50 to-teal-100 p-6 rounded-xl border-2 border-indigo-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-gradient-to-r from-indigo-600 to-teal-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-home text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-gradient-to-r from-indigo-600 to-teal-600 text-white rounded-full">صفحة Home</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "الصفحة الرئيسية"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الاحترافية في البنر الرئيسي (Hero Section)</p>
+                            <a href="/static/doctor-profile-admin.html" target="_blank" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-indigo-600 to-teal-600 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-teal-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
                         <!-- About Page Image -->
                         <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200 hover:shadow-lg transition">
                             <div class="flex items-center justify-between mb-4">
@@ -345,17 +361,24 @@
                     </div>
 
                     <!-- Preview Links -->
-                    <div class="mt-8 grid md:grid-cols-2 gap-6">
-                        <a href="/about" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-500 hover:shadow-lg transition group">
+                    <div class="mt-8 grid md:grid-cols-3 gap-6">
+                        <a href="/?lang=ar" target="_blank" class="bg-white border-2 border-indigo-200 p-6 rounded-xl hover:border-indigo-500 hover:shadow-lg transition group">
                             <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-gray-800 text-lg">معاينة صفحة "عن الدكتور"</h4>
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "الصفحة الرئيسية"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-indigo-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد صورة الدكتور في البنر الرئيسي (Hero Section)</p>
+                        </a>
+                        <a href="/about?lang=ar" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "عن الدكتور"</h4>
                                 <i class="fas fa-external-link-alt text-gray-400 group-hover:text-blue-600"></i>
                             </div>
                             <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
                         </a>
-                        <a href="/contact" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-green-500 hover:shadow-lg transition group">
+                        <a href="/contact?lang=ar" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-green-500 hover:shadow-lg transition group">
                             <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-bold text-gray-800 text-lg">معاينة صفحة "التواصل معنا"</h4>
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "التواصل معنا"</h4>
                                 <i class="fas fa-external-link-alt text-gray-400 group-hover:text-green-600"></i>
                             </div>
                             <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
