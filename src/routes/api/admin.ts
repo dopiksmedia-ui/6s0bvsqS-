@@ -1254,6 +1254,86 @@ admin.delete('/doctor-images/:id', async (c) => {
   }
 })
 
+/**
+ * POST /api/admin/upload-image
+ * Upload image file (multipart/form-data)
+ * Returns the image URL that can be used with doctor-images endpoint
+ */
+admin.post('/upload-image', async (c) => {
+  try {
+    const { MEDIA_BUCKET } = c.env
+    
+    // Parse form data
+    const formData = await c.req.formData()
+    const file = formData.get('image')
+    
+    if (!file || !(file instanceof File)) {
+      return c.json({ 
+        success: false,
+        error: 'No image file provided' 
+      }, 400)
+    }
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      return c.json({ 
+        success: false,
+        error: 'Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed.' 
+      }, 400)
+    }
+    
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    if (file.size > maxSize) {
+      return c.json({ 
+        success: false,
+        error: 'File size exceeds 5MB limit' 
+      }, 400)
+    }
+    
+    // Generate unique filename
+    const timestamp = Date.now()
+    const randomStr = Math.random().toString(36).substring(7)
+    const ext = file.name.split('.').pop()
+    const filename = `doctor-${timestamp}-${randomStr}.${ext}`
+    
+    // Convert file to ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer()
+    
+    // Upload to R2 if available, otherwise return mock URL
+    let imageUrl = ''
+    
+    if (MEDIA_BUCKET) {
+      // Upload to R2
+      await MEDIA_BUCKET.put(filename, arrayBuffer, {
+        httpMetadata: {
+          contentType: file.type,
+        },
+      })
+      imageUrl = `/static/uploads/${filename}`
+    } else {
+      // Development: just return a placeholder URL
+      imageUrl = `/static/uploads/${filename}`
+    }
+    
+    return c.json({
+      success: true,
+      message: 'Image uploaded successfully',
+      imageUrl,
+      filename,
+      size: file.size,
+      type: file.type
+    })
+  } catch (error) {
+    console.error('Upload image error:', error)
+    return c.json({ 
+      success: false,
+      error: 'Failed to upload image: ' + (error as Error).message 
+    }, 500)
+  }
+})
+
 // ============================================
 // HELPER FUNCTIONS
 // ============================================

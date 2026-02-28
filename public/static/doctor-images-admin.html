@@ -266,51 +266,48 @@
                 progressBar.style.width = '30%';
                 progressPercent.textContent = '30%';
 
-                // First, upload to media library
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    const base64 = e.target.result;
-                    
-                    progressBar.style.width = '60%';
-                    progressPercent.textContent = '60%';
+                // Create FormData
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                progressBar.style.width = '50%';
+                progressPercent.textContent = '50%';
 
-                    const uploadResponse = await axios.post(`${API_BASE}/api/admin/media/upload-file`, {
-                        filename: file.name,
-                        data: base64,
-                        alt_text_ar: altTextAr || `صورة الدكتور - ${imageType}`,
-                        alt_text_en: altTextEn || `Doctor Image - ${imageType}`
+                // Upload image file
+                const uploadResponse = await axios.post(`${API_BASE}/api/admin/upload-image`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                if (uploadResponse.data.success) {
+                    progressBar.style.width = '75%';
+                    progressPercent.textContent = '75%';
+
+                    // Add to doctor_images table
+                    const doctorImageResponse = await axios.post(`${API_BASE}/api/admin/doctor-images`, {
+                        image_type: imageType,
+                        image_url: uploadResponse.data.imageUrl,
+                        alt_text_ar: altTextAr,
+                        alt_text_en: altTextEn,
+                        is_active: isActive
                     });
 
-                    if (uploadResponse.data.success) {
-                        progressBar.style.width = '80%';
-                        progressPercent.textContent = '80%';
+                    progressBar.style.width = '100%';
+                    progressPercent.textContent = '100%';
 
-                        // Then, add to doctor_images table
-                        const doctorImageResponse = await axios.post(`${API_BASE}/api/admin/doctor-images`, {
-                            image_type: imageType,
-                            image_url: uploadResponse.data.fileUrl,
-                            alt_text_ar: altTextAr,
-                            alt_text_en: altTextEn,
-                            is_active: isActive
-                        });
-
-                        progressBar.style.width = '100%';
-                        progressPercent.textContent = '100%';
-
-                        if (doctorImageResponse.data.success) {
-                            showToast('✅ ' + doctorImageResponse.data.message, 'success');
-                            document.getElementById('uploadForm').reset();
-                            resetUpload();
-                            
-                            setTimeout(() => {
-                                uploadProgress.classList.add('hidden');
-                                progressBar.style.width = '0%';
-                                loadImages();
-                            }, 1000);
-                        }
+                    if (doctorImageResponse.data.success) {
+                        showToast('✅ ' + doctorImageResponse.data.message, 'success');
+                        document.getElementById('uploadForm').reset();
+                        resetUpload();
+                        
+                        setTimeout(() => {
+                            uploadProgress.classList.add('hidden');
+                            progressBar.style.width = '0%';
+                            loadImages();
+                        }, 1000);
                     }
-                };
-                reader.readAsDataURL(file);
+                }
             } catch (error) {
                 console.error('Upload error:', error);
                 showToast('❌ فشل رفع الصورة: ' + (error.response?.data?.error || error.message), 'error');
