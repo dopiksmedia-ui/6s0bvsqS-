@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم المتقدمة - إدارة الموقع</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Quill Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    
+    <!-- Tagify for tags input -->
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    
+    <style>
+        /* Quill Editor Customization */
+        .ql-container {
+            min-height: 300px;
+            font-family: inherit;
+        }
+        .ql-editor {
+            min-height: 300px;
+            font-size: 16px;
+        }
+        /* RTL Support for Quill */
+        [dir="rtl"] .ql-editor {
+            text-align: right;
+            direction: rtl;
+        }
+        /* Tabs */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Image Gallery */
+        .media-item {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .media-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .media-item.selected {
+            ring: 4px;
+            ring-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="text-center mb-6">
+                <i class="fas fa-user-shield text-6xl text-blue-600 mb-4"></i>
+                <h2 class="text-3xl font-bold text-gray-800">تسجيل الدخول</h2>
+                <p class="text-gray-600 mt-2">الرجاء إدخال بيانات المسؤول</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">اسم المستخدم</label>
+                    <input type="text" id="username" name="username" value="admin" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                           required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">كلمة المرور</label>
+                    <input type="password" id="password" name="password" value="admin123"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                           required>
+                </div>
+                <div id="loginError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    دخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg sticky top-0 z-40">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <i class="fas fa-hospital text-4xl"></i>
+                        <div>
+                            <h1 class="text-2xl font-bold">لوحة التحكم المتقدمة</h1>
+                            <p class="text-blue-100 text-sm">إدارة محتوى الموقع الطبي</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors shadow-md">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white border-b shadow-sm sticky top-16 z-30">
+            <div class="container mx-auto px-6">
+                <div class="flex space-x-8 space-x-reverse overflow-x-auto">
+                    <button onclick="switchTab('articles')" data-tab="articles" class="tab-btn py-4 px-6 border-b-4 border-blue-600 text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-newspaper mr-2"></i>
+                        المقالات
+                    </button>
+                    <button onclick="switchTab('media')" data-tab="media" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-images mr-2"></i>
+                        مكتبة الوسائط
+                    </button>
+                    <button onclick="switchTab('settings')" data-tab="settings" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-cog mr-2"></i>
+                        الإعدادات
+                    </button>
+                    <button onclick="switchTab('doctor-images')" data-tab="doctor-images" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-user-md mr-2"></i>
+                        صور الدكتور
+                    </button>
+                    <button onclick="switchTab('bookings')" data-tab="bookings" class="tab-btn py-4 px-6 border-b-4 border-transparent text-gray-600 hover:text-blue-600 font-semibold whitespace-nowrap">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        الحجوزات
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <main class="container mx-auto px-6 py-8">
+            <!-- Articles Tab -->
+            <div id="articlesTab" class="tab-content active">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-newspaper mr-2"></i>
+                            إدارة المقالات
+                        </h2>
+                        <button onclick="showArticleForm()" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md">
+                            <i class="fas fa-plus mr-2"></i>
+                            مقال جديد
+                        </button>
+                    </div>
+                    
+                    <div id="articlesList" class="space-y-4">
+                        <!-- Articles will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Library Tab -->
+            <div id="mediaTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">
+                            <i class="fas fa-images mr-2"></i>
+                            مكتبة الوسائط
+                        </h2>
+                        <button onclick="showUploadForm()" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md">
+                            <i class="fas fa-cloud-upload-alt mr-2"></i>
+                            رفع صورة
+                        </button>
+                    </div>
+                    
+                    <div id="mediaGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <!-- Media items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Logo Settings -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-image mr-2"></i>
+                            شعار الموقع
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">رابط الشعار</label>
+                                <input type="url" id="site_logo_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200">
+                            </div>
+                            <div id="logoPreview" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center min-h-32">
+                                <img id="logoImage" src="" alt="Logo Preview" class="max-h-24 mx-auto hidden">
+                                <p class="text-gray-500">معاينة الشعار</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language Settings -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-language mr-2"></i>
+                            إعدادات اللغة
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">اللغة الأساسية</label>
+                                <select id="primary_language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="ar">العربية</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">اللغة الثانوية</label>
+                                <select id="secondary_language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="en">English</option>
+                                    <option value="ar">العربية</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="enable_secondary_language" class="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                                <label class="mr-3 text-gray-700 font-semibold">تفعيل اللغة الثانوية</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="saveSettings()" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md">
+                        <i class="fas fa-check mr-2"></i>
+                        حفظ الإعدادات
+                    </button>
+                </div>
+            </div>
+
+            <!-- Doctor Images Tab -->
+            <div id="doctor-imagesTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-user-md mr-2"></i>
+                                إدارة صور الدكتور
+                            </h2>
+                            <p class="text-gray-600 mt-2">التحكم في صور الدكتور في صفحات "عن الدكتور" و "التواصل معنا"</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Home Page Image (NEW) -->
+                        <div class="bg-gradient-to-br from-indigo-50 to-teal-100 p-6 rounded-xl border-2 border-indigo-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-gradient-to-r from-indigo-600 to-teal-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-home text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-gradient-to-r from-indigo-600 to-teal-600 text-white rounded-full">صفحة Home</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "الصفحة الرئيسية"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الاحترافية في البنر الرئيسي (Hero Section)</p>
+                            <a href="/static/doctor-profile-admin.html" target="_blank" class="inline-flex items-center justify-center w-full bg-gradient-to-r from-indigo-600 to-teal-600 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-teal-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
+                        <!-- About Page Image -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-blue-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-user-circle text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-blue-600 text-white rounded-full">صفحة About</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "عن الدكتور"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الرئيسية (Hero Image) في صفحة التعريف بالدكتور</p>
+                            <a href="/static/doctor-images-admin.html?filter=about_hero" target="_blank" class="inline-flex items-center justify-center w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
+                        <!-- Contact Page Image -->
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-green-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-address-card text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-green-600 text-white rounded-full">صفحة Contact</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">صورة "التواصل معنا"</h3>
+                            <p class="text-sm text-gray-600 mb-4">الصورة الدائرية (Profile Photo) في صفحة التواصل</p>
+                            <a href="/static/doctor-images-admin.html?filter=contact_profile" target="_blank" class="inline-flex items-center justify-center w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                                <i class="fas fa-edit ml-2"></i>
+                                إدارة الصورة
+                            </a>
+                        </div>
+
+                        <!-- All Images -->
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-200 hover:shadow-lg transition">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="bg-purple-600 text-white p-3 rounded-lg">
+                                    <i class="fas fa-images text-2xl"></i>
+                                </div>
+                                <span class="text-xs font-semibold px-3 py-1 bg-purple-600 text-white rounded-full">الكل</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">جميع الصور</h3>
+                            <p class="text-sm text-gray-600 mb-4">عرض وإدارة جميع صور الدكتور المرفوعة</p>
+                            <a href="/static/doctor-images-admin.html" target="_blank" class="inline-flex items-center justify-center w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">
+                                <i class="fas fa-th ml-2"></i>
+                                عرض الكل
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="bg-blue-50 border-r-4 border-blue-600 p-6 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-info-circle text-blue-600 ml-2"></i>
+                            كيفية الاستخدام
+                        </h4>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>رفع صورة جديدة:</strong> اضغط على "إدارة الصورة" ثم اسحب الصورة أو اختر من جهازك</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>تفعيل صورة:</strong> عند رفع صورة جديدة مع تفعيل "تفعيل تلقائياً"، ستظهر فوراً في الصفحة</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>تغيير الصورة:</strong> ارفع صورة جديدة وفعّلها، الصورة القديمة ستُلغى تلقائياً</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-600 ml-2 mt-1"></i>
+                                <span><strong>أنواع الصور المدعومة:</strong> PNG, JPG, JPEG, WebP, GIF (أقصى حجم: 5MB)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Preview Links -->
+                    <div class="mt-8 grid md:grid-cols-3 gap-6">
+                        <a href="/?lang=ar" target="_blank" class="bg-white border-2 border-indigo-200 p-6 rounded-xl hover:border-indigo-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "الصفحة الرئيسية"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-indigo-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد صورة الدكتور في البنر الرئيسي (Hero Section)</p>
+                        </a>
+                        <a href="/about?lang=ar" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-blue-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "عن الدكتور"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-blue-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
+                        </a>
+                        <a href="/contact?lang=ar" target="_blank" class="bg-white border-2 border-gray-200 p-6 rounded-xl hover:border-green-500 hover:shadow-lg transition group">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-gray-800 text-lg">معاينة "التواصل معنا"</h4>
+                                <i class="fas fa-external-link-alt text-gray-400 group-hover:text-green-600"></i>
+                            </div>
+                            <p class="text-gray-600 text-sm">شاهد كيف تظهر الصورة في الصفحة الحقيقية</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="bookingsTab" class="tab-content">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                إدارة الحجوزات
+                            </h2>
+                            <p class="text-gray-600 mt-2">عرض وإدارة حجوزات المرضى</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center py-12">
+                        <i class="fas fa-calendar-alt text-6xl text-blue-600 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">إدارة الحجوزات المتقدمة</h3>
+                        <p class="text-gray-600 mb-6">للوصول إلى لوحة التحكم الكاملة للحجوزات</p>
+                        <a href="/static/bookings-admin.html" target="_blank" class="inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition font-semibold text-lg shadow-lg">
+                            <i class="fas fa-external-link-alt ml-2"></i>
+                            فتح لوحة الحجوزات
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Image Modal -->
+    <div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">رفع صورة جديدة</h3>
+                <button onclick="closeUploadForm()" class="text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="uploadForm" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">رابط الصورة (URL)</label>
+                    <input type="url" id="upload_image_url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="https://example.com/image.jpg" required>
+                    <p class="text-sm text-gray-500 mt-1">أدخل رابط الصورة من الإنترنت (Unsplash, Imgur, إلخ)</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">النص البديل (عربي)</label>
+                        <input type="text" id="upload_alt_ar" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">النص البديل (English)</label>
+                        <input type="text" id="upload_alt_en" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4 space-x-reverse">
+                    <button type="button" onclick="closeUploadForm()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition-all">
+                        <i class="fas fa-cloud-upload-alt mr-2"></i>
+                        رفع الصورة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Article Form Modal (will be created dynamically by JavaScript) -->
+    
+    <script src="/static/admin-advanced.js"></script>
+</body>
+</html>

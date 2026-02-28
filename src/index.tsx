@@ -33,6 +33,24 @@ app.use('/api/*', cors());
 // Serve static files from public directory
 app.use('/static/*', serveStatic({ root: './public' }));
 
+// IMPORTANT: Override admin.html to serve from dist/static with no-cache headers
+app.get('/static/admin.html', async (c) => {
+  try {
+    // Read the admin.html file
+    const file = await fetch(new URL('./static/admin.html', c.req.url).href);
+    const html = await file.text();
+    
+    // Return with no-cache headers
+    return c.html(html, 200, {
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+  } catch (error) {
+    return c.text('Error loading admin page', 500);
+  }
+});
+
 // Page Routes (before API routes)
 app.route('/', homePageRoutes);
 app.route('/booking', bookingPageRoutes);
