@@ -64,11 +64,11 @@ homePage.get('/', (c) => {
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-slate-50">
     ${getNavigation(lang, '/')}
 
     <!-- Hero Section with Doctor Image -->
-    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-blue-800 text-white overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-indigo-700 to-teal-600 text-white overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
@@ -79,9 +79,9 @@ homePage.get('/', (c) => {
                 <!-- Text Content -->
                 <div class="${lang === 'ar' ? 'lg:order-2' : 'lg:order-1'} text-center lg:text-${lang === 'ar' ? 'right' : 'left'}">
                     <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-white/20">
-                        <i class="fas fa-certificate text-yellow-300"></i>
-                        <span class="text-sm font-medium">
+                    <div class="inline-flex items-center gap-2 bg-amber-500/20 backdrop-blur-sm px-5 py-2.5 rounded-full mb-6 border-2 border-amber-400/40">
+                        <i class="fas fa-award text-amber-300"></i>
+                        <span class="text-sm font-bold text-amber-100">
                             ${lang === 'ar' ? 'زمالات بريطانية معتمدة' : 'Certified UK Fellowships'}
                         </span>
                     </div>
@@ -90,15 +90,15 @@ homePage.get('/', (c) => {
                         ${lang === 'ar' ? 'د. محمد سعيد بن علي' : 'Dr. Mohammed Saeed bin Ali'}
                     </h1>
                     
-                    <div class="h-1 w-24 bg-gradient-to-r from-teal-400 to-blue-400 mb-6 ${lang === 'ar' ? 'mr-auto lg:mr-0' : 'ml-auto lg:ml-0'} mx-auto lg:mx-0"></div>
+                    <div class="h-1.5 w-32 bg-gradient-to-r from-amber-400 via-teal-400 to-indigo-400 rounded-full mb-6 ${lang === 'ar' ? 'mr-auto lg:mr-0' : 'ml-auto lg:ml-0'} mx-auto lg:mx-0 shadow-lg"></div>
                     
-                    <p class="text-xl md:text-2xl mb-6 text-blue-100 font-light">
+                    <p class="text-xl md:text-2xl mb-6 text-teal-100 font-light">
                         ${lang === 'ar' 
                             ? 'استشاري جراحة القولون والمستقيم' 
                             : 'Consultant Colorectal Surgeon'}
                     </p>
                     
-                    <p class="text-lg mb-8 text-blue-200 max-w-xl mx-auto lg:mx-0">
+                    <p class="text-lg mb-8 text-indigo-100 max-w-xl mx-auto lg:mx-0">
                         ${lang === 'ar'
                             ? 'خبرة بريطانية متميزة في علاج أمراض القولون والمستقيم بأحدث التقنيات'
                             : 'Distinguished British experience in treating colorectal diseases with the latest techniques'}
@@ -106,11 +106,11 @@ homePage.get('/', (c) => {
                     
                     <!-- Call to Action Buttons -->
                     <div class="flex gap-4 justify-center lg:justify-start flex-wrap">
-                        <a href="/booking?lang=${lang}" class="group bg-gradient-to-r from-blue-600 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-2xl transition-all shadow-xl hover:scale-105 inline-flex items-center gap-2">
+                        <a href="/booking?lang=${lang}" class="group bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all shadow-xl hover:scale-105 inline-flex items-center gap-3">
                             <i class="fas fa-calendar-check group-hover:scale-110 transition-transform"></i>
                             ${lang === 'ar' ? 'احجز موعدك الآن' : 'Book Appointment'}
                         </a>
-                        <a href="https://wa.me/966569925966" target="_blank" class="group bg-green-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-600 transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-2">
+                        <a href="https://wa.me/966569925966" target="_blank" class="group bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all shadow-xl hover:scale-105 inline-flex items-center gap-3">
                             <i class="fab fa-whatsapp text-2xl group-hover:scale-110 transition-transform"></i>
                             ${lang === 'ar' ? 'تواصل واتساب' : 'WhatsApp'}
                         </a>
@@ -121,13 +121,13 @@ homePage.get('/', (c) => {
                 <div class="${lang === 'ar' ? 'lg:order-1' : 'lg:order-2'} relative">
                     <div class="relative max-w-lg mx-auto">
                         <!-- Decorative Elements -->
-                        <div class="absolute -top-6 -${lang === 'ar' ? 'right' : 'left'}-6 w-72 h-72 bg-purple-400/20 rounded-full blur-3xl"></div>
-                        <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 w-72 h-72 bg-teal-400/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -top-6 -${lang === 'ar' ? 'right' : 'left'}-6 w-72 h-72 bg-amber-400/30 rounded-full blur-3xl animate-pulse"></div>
+                        <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 w-72 h-72 bg-teal-400/30 rounded-full blur-3xl animate-pulse"></div>
                         
                         <!-- Main Image Container -->
                         <div class="relative z-10">
                             <!-- Floating Badge -->
-                            <div class="absolute -top-4 ${lang === 'ar' ? '-left-4' : '-right-4'} z-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-2xl shadow-2xl transform rotate-3 animate-pulse-slow">
+                            <div class="absolute -top-4 ${lang === 'ar' ? '-left-4' : '-right-4'} z-20 bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 text-white px-6 py-3 rounded-2xl shadow-2xl transform rotate-3">
                                 <div class="text-sm font-bold">${lang === 'ar' ? 'خبرة بريطانية' : 'UK Experience'}</div>
                                 <div class="text-xs opacity-90">${lang === 'ar' ? 'معتمدة' : 'Certified'}</div>
                             </div>
@@ -142,14 +142,14 @@ homePage.get('/', (c) => {
                                 >
                                 
                                 <!-- Trust Badge -->
-                                <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white text-blue-600 px-8 py-4 rounded-2xl shadow-2xl">
+                                <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-teal-600 text-white px-8 py-4 rounded-2xl shadow-2xl">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <i class="fas fa-shield-alt text-2xl text-blue-600"></i>
+                                        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-shield-check text-2xl text-white"></i>
                                         </div>
                                         <div class="text-${lang === 'ar' ? 'right' : 'left'}">
-                                            <div class="text-sm font-bold text-gray-800">${lang === 'ar' ? 'رعاية موثوقة' : 'Trusted Care'}</div>
-                                            <div class="text-xs text-gray-600">${lang === 'ar' ? 'تجربة متميزة' : 'Excellence'}</div>
+                                            <div class="text-sm font-bold">${lang === 'ar' ? 'رعاية موثوقة' : 'Trusted Care'}</div>
+                                            <div class="text-xs opacity-90">${lang === 'ar' ? 'تجربة متميزة' : 'Excellence'}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -162,49 +162,77 @@ homePage.get('/', (c) => {
             <!-- Scroll Down Indicator -->
             <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
                 <a href="#about" class="text-white/80 hover:text-white transition-colors group">
-                    <div class="text-sm mb-2">${lang === 'ar' ? 'اكتشف المزيد' : 'Discover More'}</div>
-                    <i class="fas fa-chevron-down text-2xl animate-bounce group-hover:text-blue-200"></i>
+                    <div class="text-sm mb-2 font-medium">${lang === 'ar' ? 'اكتشف المزيد' : 'Discover More'}</div>
+                    <i class="fas fa-chevron-down text-2xl animate-bounce group-hover:text-teal-300"></i>
                 </a>
             </div>
         </div>
     </section>
     
     <!-- Trust Statistics Bar -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
-                <div class="p-6">
-                    <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">3</div>
-                    <div class="text-gray-600 font-medium">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
+    <section class="py-20 bg-white relative overflow-hidden">
+        <!-- Background Decoration -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-teal-50 opacity-60"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-indigo-100 hover:border-indigo-300">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-award text-2xl text-white"></i>
+                        </div>
+                    </div>
+                    <div class="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 bg-clip-text text-transparent mb-2 text-center">3</div>
+                    <div class="text-gray-700 font-semibold text-center">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
                 </div>
-                <div class="p-6">
-                    <div class="text-4xl md:text-5xl font-bold text-green-600 mb-2">10+</div>
-                    <div class="text-gray-600 font-medium">${lang === 'ar' ? 'خدمات علاجية' : 'Medical Services'}</div>
+                <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-teal-100 hover:border-teal-300">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-stethoscope text-2xl text-white"></i>
+                        </div>
+                    </div>
+                    <div class="text-5xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent mb-2 text-center">10+</div>
+                    <div class="text-gray-700 font-semibold text-center">${lang === 'ar' ? 'خدمات علاجية' : 'Medical Services'}</div>
                 </div>
-                <div class="p-6">
-                    <div class="text-4xl md:text-5xl font-bold text-purple-600 mb-2">98%</div>
-                    <div class="text-gray-600 font-medium">${lang === 'ar' ? 'رضا المرضى' : 'Patient Satisfaction'}</div>
+                <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-amber-100 hover:border-amber-300">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-smile text-2xl text-white"></i>
+                        </div>
+                    </div>
+                    <div class="text-5xl font-bold bg-gradient-to-r from-amber-600 to-amber-700 bg-clip-text text-transparent mb-2 text-center">98%</div>
+                    <div class="text-gray-700 font-semibold text-center">${lang === 'ar' ? 'رضا المرضى' : 'Patient Satisfaction'}</div>
                 </div>
             </div>
         </div>
     </section>
     
     <!-- Quick About Section -->
-    <section id="about" class="py-20 bg-gray-50">
+    <section id="about" class="py-24 bg-gradient-to-br from-slate-50 to-indigo-50/30">
         <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-4xl font-bold text-gray-800 mb-6">
-                    ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
-                </h2>
-                <p class="text-xl text-gray-700 leading-relaxed mb-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center mb-12">
+                    <div class="inline-block bg-indigo-100 text-indigo-600 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                        <i class="fas fa-user-md ${lang === 'ar' ? 'ml-2' : 'mr-2'}"></i>
+                        ${lang === 'ar' ? 'تعرف على الدكتور' : 'Meet The Doctor'}
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+                        ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
+                    </h2>
+                    <div class="h-1.5 w-24 bg-gradient-to-r from-indigo-600 to-teal-600 rounded-full mx-auto mb-6"></div>
+                </div>
+                
+                <p class="text-xl text-slate-700 leading-relaxed mb-10 text-center">
                     ${lang === 'ar'
                         ? 'د. محمد سعيد بن علي - استشاري متخصص في جراحة القولون والمستقيم مع خبرة بريطانية متميزة. حاصل على زمالات من أبرز المستشفيات في المملكة المتحدة، ويجمع بين الخبرة الأكاديمية والمهارات السريرية المتقدمة في علاج أمراض القولون والمستقيم.'
                         : 'Dr. Mohammed Saeed bin Ali - A specialized consultant in colorectal surgery with distinguished British experience. Holds fellowships from the most prominent hospitals in the United Kingdom, combining academic expertise with advanced clinical skills in treating colorectal diseases.'}
                 </p>
+                
                 <div class="flex gap-4 justify-center">
-                    <a href="/about" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    <a href="/about?lang=${lang}" class="group bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all shadow-lg hover:scale-105 inline-flex items-center gap-2">
                         ${lang === 'ar' ? 'المزيد عن الدكتور' : 'Learn More'}
-                        <i class="fas fa-arrow-${lang === 'ar' ? 'left' : 'right'} ml-2"></i>
+                        <i class="fas fa-arrow-${lang === 'ar' ? 'left' : 'right'} group-hover:translate-x-1 transition-transform"></i>
                     </a>
                 </div>
             </div>
@@ -212,14 +240,19 @@ homePage.get('/', (c) => {
     </section>
 
     <!-- Media Appearances Section -->
-    <section class="py-20 bg-white">
+    <section class="py-24 bg-white">
         <div class="container mx-auto px-6">
+            <!-- Section Header -->
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">
-                    <i class="fas fa-video text-red-600 mr-3"></i>
+                <div class="inline-block bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                    <i class="fab fa-youtube ${lang === 'ar' ? 'ml-2' : 'mr-2'}"></i>
+                    ${lang === 'ar' ? 'فيديوهات' : 'Videos'}
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                     ${lang === 'ar' ? 'الظهور الإعلامي' : 'Media Appearances'}
                 </h2>
-                <p class="text-xl text-gray-600">
+                <div class="h-1.5 w-24 bg-gradient-to-r from-red-500 to-red-600 rounded-full mx-auto mb-6"></div>
+                <p class="text-xl text-slate-600">
                     ${lang === 'ar' 
                         ? 'أحدث الفيديوهات والمقابلات الطبية للدكتور محمد سعيد' 
                         : 'Latest Videos and Medical Interviews by Dr. Mohammed Saeed'}
@@ -237,7 +270,7 @@ homePage.get('/', (c) => {
 
             <!-- Load More Button -->
             <div class="text-center">
-                <button id="load-more-btn" class="hidden bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-flex items-center gap-2">
+                <button id="load-more-btn" class="hidden bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl transition-all shadow-lg hover:scale-105 inline-flex items-center gap-2">
                     <i class="fas fa-plus-circle"></i>
                     ${lang === 'ar' ? 'عرض المزيد' : 'Load More'}
                 </button>
@@ -246,8 +279,8 @@ homePage.get('/', (c) => {
             <!-- YouTube Channel Link -->
             <div class="text-center mt-8">
                 <a href="https://youtube.com/@dr.mohammedsaeedali?si=w8Tobr16n2UV6c02" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-lg">
-                    <i class="fab fa-youtube text-2xl"></i>
+                   class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-bold text-lg hover:underline">
+                    <i class="fab fa-youtube text-3xl"></i>
                     ${lang === 'ar' ? 'زيارة قناة اليوتيوب' : 'Visit YouTube Channel'}
                     <i class="fas fa-external-link-alt text-sm"></i>
                 </a>
@@ -456,14 +489,19 @@ homePage.get('/', (c) => {
     </script>
 
     <!-- Latest Articles Section -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-24 bg-gradient-to-br from-slate-50 to-teal-50/30">
         <div class="container mx-auto px-6">
+            <!-- Section Header -->
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">
-                    <i class="fas fa-newspaper text-blue-600 ${lang === 'ar' ? 'ml-3' : 'mr-3'}"></i>
+                <div class="inline-block bg-teal-100 text-teal-600 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                    <i class="fas fa-newspaper ${lang === 'ar' ? 'ml-2' : 'mr-2'}"></i>
+                    ${lang === 'ar' ? 'مقالات طبية' : 'Medical Articles'}
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                     ${lang === 'ar' ? 'أحدث المقالات' : 'Latest Articles'}
                 </h2>
-                <p class="text-xl text-gray-600">
+                <div class="h-1.5 w-24 bg-gradient-to-r from-teal-600 to-indigo-600 rounded-full mx-auto mb-6"></div>
+                <p class="text-xl text-slate-600">
                     ${lang === 'ar' 
                         ? 'مقالات طبية متخصصة في جراحة القولون والمستقيم' 
                         : 'Specialized medical articles in colorectal surgery'}
@@ -481,7 +519,7 @@ homePage.get('/', (c) => {
 
             <!-- View All Articles Button -->
             <div class="text-center">
-                <a href="/articles?lang=${lang}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-flex items-center gap-2">
+                <a href="/articles?lang=${lang}" class="bg-gradient-to-r from-teal-600 to-teal-700 text-white px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all shadow-lg hover:scale-105 inline-flex items-center gap-2">
                     <i class="fas fa-book-open"></i>
                     ${lang === 'ar' ? 'المزيد من المقالات' : 'More Articles'}
                     <i class="fas fa-arrow-${lang === 'ar' ? 'left' : 'right'}"></i>
@@ -581,7 +619,7 @@ homePage.get('/', (c) => {
     </script>
 
     <!-- Patient Testimonials -->
-    <section class="py-20 bg-gradient-to-br from-purple-900 via-blue-900 to-blue-800 text-white">
+    <section class="py-24 bg-gradient-to-br from-indigo-900 via-indigo-800 to-teal-700 text-white relative overflow-hidden">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center mb-4">
                 ${lang === 'ar' ? 'آراء المرضى' : 'Patient Testimonials'}
@@ -784,7 +822,7 @@ homePage.get('/', (c) => {
     </script>
 
     <!-- Services CTA -->
-    <section class="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white">
+    <section class="py-24 bg-gradient-to-br from-indigo-600 via-indigo-700 to-teal-600 text-white relative overflow-hidden">
         <div class="container mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold mb-6">
                 ${lang === 'ar' ? 'جاهزون لمساعدتك' : 'Ready to Help You'}
