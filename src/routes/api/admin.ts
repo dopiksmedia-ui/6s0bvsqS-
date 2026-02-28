@@ -393,7 +393,16 @@ admin.post('/media/upload-file', async (c) => {
       // Store in database with base64 data for local development
       const base64Data = btoa(String.fromCharCode(...buffer))
       
-      // Save to media_library with base64
+      // Save base64 to media_files for serving
+      await DB.prepare(`
+        INSERT OR REPLACE INTO media_files (filename, content_type, file_data)
+        VALUES (?, ?, ?)
+      `).bind(filename, file.type, base64Data).run()
+      
+      // Also save file URL as /api/media/:filename for consistency
+      fileUrl = `/api/media/${filename}`
+      
+      // Save to media_library with metadata
       const result = await DB.prepare(`
         INSERT INTO media_library (
           filename, original_filename, file_url, file_type, mime_type,
