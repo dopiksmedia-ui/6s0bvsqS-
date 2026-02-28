@@ -357,6 +357,7 @@ bookingPage.get('/', (c) => {
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = \`\${year}-\${String(month + 1).padStart(2, '0')}-\${String(day).padStart(2, '0')}\`;
                 const date = new Date(year, month, day);
+                date.setHours(0, 0, 0, 0);
                 const isAvailable = availableDates.includes(dateStr);
                 const isPast = date < today;
                 const isSelected = selectedDate === dateStr;
