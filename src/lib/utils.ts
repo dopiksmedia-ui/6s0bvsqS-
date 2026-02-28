@@ -164,22 +164,41 @@ export function createPagination(page: number, limit: number, total: number) {
 }
 
 /**
- * Get language from request (default: ar)
+ * Get language from request
+ * Priority: 1. Cookie, 2. URL param, 3. Accept-Language header, 4. Default to Arabic
  */
 export function getLanguage(request: Request): 'ar' | 'en' {
   const url = new URL(request.url);
   const langParam = url.searchParams.get('lang');
-  const langHeader = request.headers.get('Accept-Language');
+  const cookieHeader = request.headers.get('Cookie') || '';
   
+  // Parse cookies manually (simple approach for Cloudflare Workers)
+  const cookies: Record<string, string> = {};
+  cookieHeader.split(';').forEach(cookie => {
+    const [key, value] = cookie.trim().split('=');
+    if (key && value) {
+      cookies[key] = value;
+    }
+  });
+  
+  // Priority 1: Cookie (persisted choice)
+  if (cookies['lang'] === 'en' || cookies['lang'] === 'ar') {
+    return cookies['lang'] as 'ar' | 'en';
+  }
+  
+  // Priority 2: URL parameter (for switching language)
   if (langParam === 'en' || langParam === 'ar') {
     return langParam;
   }
   
-  if (langHeader?.includes('en')) {
+  // Priority 3: Accept-Language header
+  const langHeader = request.headers.get('Accept-Language');
+  if (langHeader?.includes('en') && !langHeader?.includes('ar')) {
     return 'en';
   }
   
-  return 'ar'; // Default to Arabic
+  // Priority 4: Default to Arabic
+  return 'ar';
 }
 
 /**

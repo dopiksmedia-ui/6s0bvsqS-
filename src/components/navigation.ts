@@ -27,19 +27,19 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
 
           <!-- Desktop Navigation -->
           <div class="hidden md:flex items-center space-x-6 ${isRTL ? 'space-x-reverse' : ''}">
-            <a href="/" class="nav-link ${currentPath === '/' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
+            <a href="/?lang=${lang}" class="nav-link ${currentPath === '/' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
               <i class="fas fa-home ml-2"></i>
               ${lang === 'ar' ? 'الرئيسية' : 'Home'}
             </a>
-            <a href="/about" class="nav-link ${currentPath === '/about' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
+            <a href="/about?lang=${lang}" class="nav-link ${currentPath === '/about' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
               <i class="fas fa-user-md ml-2"></i>
               ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
             </a>
-            <a href="/articles" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
+            <a href="/articles?lang=${lang}" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
               <i class="fas fa-newspaper ml-2"></i>
               ${lang === 'ar' ? 'المقالات' : 'Articles'}
             </a>
-            <a href="/contact" class="nav-link ${currentPath === '/contact' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
+            <a href="/contact?lang=${lang}" class="nav-link ${currentPath === '/contact' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors">
               <i class="fas fa-envelope ml-2"></i>
               ${lang === 'ar' ? 'التواصل' : 'Contact'}
             </a>
@@ -51,7 +51,7 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
             </button>
             
             <!-- Book Now Button -->
-            <a href="/booking" class="bg-gradient-to-r from-blue-600 to-teal-500 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+            <a href="/booking?lang=${lang}" class="bg-gradient-to-r from-blue-600 to-teal-500 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
               <i class="fas fa-calendar-check ml-2"></i>
               ${lang === 'ar' ? 'احجز الآن' : 'Book Now'}
             </a>
@@ -66,19 +66,19 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
         <!-- Mobile Navigation -->
         <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-gray-200 mt-2">
           <div class="flex flex-col space-y-3 pt-4">
-            <a href="/" class="nav-link ${currentPath === '/' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
+            <a href="/?lang=${lang}" class="nav-link ${currentPath === '/' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-home ml-2"></i>
               ${lang === 'ar' ? 'الرئيسية' : 'Home'}
             </a>
-            <a href="/about" class="nav-link ${currentPath === '/about' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
+            <a href="/about?lang=${lang}" class="nav-link ${currentPath === '/about' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-user-md ml-2"></i>
               ${lang === 'ar' ? 'عن الدكتور' : 'About Doctor'}
             </a>
-            <a href="/articles" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
+            <a href="/articles?lang=${lang}" class="nav-link ${currentPath === '/articles' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-newspaper ml-2"></i>
               ${lang === 'ar' ? 'المقالات' : 'Articles'}
             </a>
-            <a href="/contact" class="nav-link ${currentPath === '/contact' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
+            <a href="/contact?lang=${lang}" class="nav-link ${currentPath === '/contact' ? 'text-blue-600 font-semibold' : 'text-gray-700'} hover:text-blue-600 transition-colors py-2">
               <i class="fas fa-envelope ml-2"></i>
               ${lang === 'ar' ? 'التواصل' : 'Contact'}
             </a>
@@ -86,7 +86,7 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
               <i class="fas fa-globe ml-1"></i>
               ${lang === 'ar' ? 'English' : 'عربي'}
             </button>
-            <a href="/booking" class="bg-gradient-to-r from-blue-600 to-teal-500 text-white px-6 py-2.5 rounded-full font-semibold text-center hover:shadow-lg">
+            <a href="/booking?lang=${lang}" class="bg-gradient-to-r from-blue-600 to-teal-500 text-white px-6 py-2.5 rounded-full font-semibold text-center hover:shadow-lg">
               <i class="fas fa-calendar-check ml-2"></i>
               ${lang === 'ar' ? 'احجز الآن' : 'Book Now'}
             </a>
@@ -115,10 +115,14 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
       function toggleLanguage() {
         const currentLang = document.documentElement.lang || 'ar';
         const newLang = currentLang === 'ar' ? 'en' : 'ar';
-        const currentPath = window.location.pathname;
-        const currentSearch = window.location.search;
-        const separator = currentSearch ? '&' : '?';
-        window.location.href = currentPath + currentSearch + separator + 'lang=' + newLang;
+        
+        // Get current URL without any existing lang parameter
+        const url = new URL(window.location.href);
+        url.searchParams.delete('lang');
+        url.searchParams.set('lang', newLang);
+        
+        // Reload with new language (will be saved to cookie)
+        window.location.href = url.toString();
       }
     </script>
   `;

@@ -1301,7 +1301,7 @@ admin.post('/upload-image', async (c) => {
     // Convert file to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer()
     
-    // Upload to R2 if available, otherwise return mock URL
+    // Upload to R2 if available
     let imageUrl = ''
     
     if (MEDIA_BUCKET) {
@@ -1311,9 +1311,10 @@ admin.post('/upload-image', async (c) => {
           contentType: file.type,
         },
       })
-      imageUrl = `/static/uploads/${filename}`
+      // Use API endpoint to serve images from R2
+      imageUrl = `/api/media/${filename}`
     } else {
-      // Development: just return a placeholder URL
+      // Development fallback: use static URL
       imageUrl = `/static/uploads/${filename}`
     }
     

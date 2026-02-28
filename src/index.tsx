@@ -18,6 +18,7 @@ import adminPageRoutes from './routes/admin-page';
 import testAdminPageRoutes from './routes/test-admin';
 import youtubeApiRoutes from './routes/api/youtube';
 import adminApiRoutes from './routes/api/admin';
+import mediaApiRoutes from './routes/api/media';
 
 // Import middleware
 import { languageMiddleware } from './middleware/language';
@@ -48,6 +49,7 @@ app.route('/api/articles', articlesRoutes);
 app.route('/api/booking', bookingRoutes);
 app.route('/api/youtube', youtubeApiRoutes);
 app.route('/api/admin', adminApiRoutes);
+app.route('/api/media', mediaApiRoutes);
 
 app.get('/api/health', (c) => {
   return c.json({
