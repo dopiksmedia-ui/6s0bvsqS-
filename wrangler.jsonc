@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "doctor-db-production",
-      "database_id": "to-be-created",
+      "database_id": "6027a945-ee09-4257-80af-0588ed77f317",
       "migrations_dir": "migrations"
     }
   ],
