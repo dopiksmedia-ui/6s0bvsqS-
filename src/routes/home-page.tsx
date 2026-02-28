@@ -18,8 +18,8 @@ homePage.get('/', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${lang === 'ar' ? 'د. محمد سعيد - استشاري جراحة القولون والمستقيم' : 'Dr. Mohammed Saeed - Consultant Colorectal Surgeon'}</title>
-    <meta name="description" content="${lang === 'ar' ? 'د. محمد سعيد ابن محسن علي - استشاري جراحة القولون والمستقيم مع خبرة بريطانية متميزة' : 'Dr. Mohammed Saeed bin Mohsen Ali - Consultant Colorectal Surgeon with distinguished British experience'}">
+    <title>${lang === 'ar' ? 'د. محمد سعيد بن علي - استشاري جراحة القولون والمستقيم' : 'Dr. Mohammed Saeed bin Ali - Consultant Colorectal Surgeon'}</title>
+    <meta name="description" content="${lang === 'ar' ? 'د. محمد سعيد بن علي - استشاري جراحة القولون والمستقيم مع خبرة بريطانية متميزة' : 'Dr. Mohammed Saeed bin Ali - Consultant Colorectal Surgeon with distinguished British experience'}">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
@@ -67,33 +67,103 @@ homePage.get('/', (c) => {
 <body class="bg-gray-50">
     ${getNavigation(lang, '/')}
 
-    <!-- Hero Section -->
-    <section class="relative h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl md:text-6xl font-bold mb-4">
-                ${lang === 'ar' ? 'د. محمد سعيد ابن محسن علي' : 'Dr. Mohammed Saeed bin Mohsen Ali'}
-            </h1>
-            <p class="text-xl md:text-2xl mb-8 text-blue-100">
-                ${lang === 'ar' 
-                    ? 'استشاري جراحة القولون والمستقيم | زمالات بريطانية متميزة' 
-                    : 'Consultant Colorectal Surgeon | Distinguished UK Fellowships'}
-            </p>
-            
-            <div class="flex gap-4 justify-center flex-wrap">
-                <a href="/booking" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition inline-flex items-center gap-2">
-                    <i class="fas fa-calendar-check"></i>
-                    ${lang === 'ar' ? 'احجز موعدك الآن' : 'Book Now'}
-                </a>
-                <a href="https://wa.me/966569925966" class="bg-green-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-green-600 transition inline-flex items-center gap-2">
-                    <i class="fab fa-whatsapp"></i>
-                    ${lang === 'ar' ? 'تواصل واتساب' : 'WhatsApp'}
-                </a>
+    <!-- Hero Section with Doctor Image -->
+    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 py-20 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div class="${lang === 'ar' ? 'lg:order-2' : 'lg:order-1'} text-center lg:text-${lang === 'ar' ? 'right' : 'left'}">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-white/20">
+                        <i class="fas fa-certificate text-yellow-300"></i>
+                        <span class="text-sm font-medium">
+                            ${lang === 'ar' ? 'زمالات بريطانية معتمدة' : 'Certified UK Fellowships'}
+                        </span>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                        ${lang === 'ar' ? 'د. محمد سعيد بن علي' : 'Dr. Mohammed Saeed bin Ali'}
+                    </h1>
+                    
+                    <div class="h-1 w-24 bg-gradient-to-r from-blue-400 to-teal-400 mb-6 ${lang === 'ar' ? 'mr-auto lg:mr-0' : 'ml-auto lg:ml-0'} mx-auto lg:mx-0"></div>
+                    
+                    <p class="text-xl md:text-2xl mb-6 text-blue-100 font-light">
+                        ${lang === 'ar' 
+                            ? 'استشاري جراحة القولون والمستقيم' 
+                            : 'Consultant Colorectal Surgeon'}
+                    </p>
+                    
+                    <p class="text-lg mb-8 text-blue-200 max-w-xl mx-auto lg:mx-0">
+                        ${lang === 'ar'
+                            ? 'خبرة بريطانية متميزة في علاج أمراض القولون والمستقيم بأحدث التقنيات'
+                            : 'Distinguished British experience in treating colorectal diseases with the latest techniques'}
+                    </p>
+                    
+                    <!-- Call to Action Buttons -->
+                    <div class="flex gap-4 justify-center lg:justify-start flex-wrap">
+                        <a href="/booking?lang=${lang}" class="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-2">
+                            <i class="fas fa-calendar-check group-hover:scale-110 transition-transform"></i>
+                            ${lang === 'ar' ? 'احجز موعدك الآن' : 'Book Appointment'}
+                        </a>
+                        <a href="https://wa.me/966569925966" target="_blank" class="group bg-green-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-600 transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-2">
+                            <i class="fab fa-whatsapp text-2xl group-hover:scale-110 transition-transform"></i>
+                            ${lang === 'ar' ? 'تواصل واتساب' : 'WhatsApp'}
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Doctor Image -->
+                <div class="${lang === 'ar' ? 'lg:order-1' : 'lg:order-2'} relative">
+                    <div class="relative max-w-lg mx-auto">
+                        <!-- Decorative Elements -->
+                        <div class="absolute -top-6 -${lang === 'ar' ? 'right' : 'left'}-6 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 w-72 h-72 bg-teal-400/20 rounded-full blur-3xl"></div>
+                        
+                        <!-- Main Image Container -->
+                        <div class="relative z-10">
+                            <!-- Floating Badge -->
+                            <div class="absolute -top-4 ${lang === 'ar' ? '-left-4' : '-right-4'} z-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-2xl shadow-2xl transform rotate-3 animate-pulse-slow">
+                                <div class="text-sm font-bold">${lang === 'ar' ? 'خبرة بريطانية' : 'UK Experience'}</div>
+                                <div class="text-xs opacity-90">${lang === 'ar' ? 'معتمدة' : 'Certified'}</div>
+                            </div>
+                            
+                            <!-- Image Frame -->
+                            <div class="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-3xl p-2 border-2 border-white/20 shadow-2xl">
+                                <img 
+                                    src="/api/media/doctor-profile.jpg" 
+                                    alt="${lang === 'ar' ? 'د. محمد سعيد بن علي' : 'Dr. Mohammed Saeed bin Ali'}" 
+                                    class="w-full h-auto rounded-2xl shadow-2xl"
+                                    onerror="this.src='https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&h=800&fit=crop&q=80'"
+                                >
+                                
+                                <!-- Trust Badge -->
+                                <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white text-blue-600 px-8 py-4 rounded-2xl shadow-2xl">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-shield-alt text-2xl text-blue-600"></i>
+                                        </div>
+                                        <div class="text-${lang === 'ar' ? 'right' : 'left'}">
+                                            <div class="text-sm font-bold text-gray-800">${lang === 'ar' ? 'رعاية موثوقة' : 'Trusted Care'}</div>
+                                            <div class="text-xs text-gray-600">${lang === 'ar' ? 'تجربة متميزة' : 'Excellence'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="mt-12 text-center">
-                <a href="#about" class="text-white hover:text-blue-200 text-lg">
-                    <i class="fas fa-chevron-down animate-bounce"></i><br>
-                    ${lang === 'ar' ? 'استكشف المزيد' : 'Explore More'}
+            <!-- Scroll Down Indicator -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
+                <a href="#about" class="text-white/80 hover:text-white transition-colors group">
+                    <div class="text-sm mb-2">${lang === 'ar' ? 'اكتشف المزيد' : 'Discover More'}</div>
+                    <i class="fas fa-chevron-down text-2xl animate-bounce group-hover:text-blue-200"></i>
                 </a>
             </div>
         </div>
@@ -132,8 +202,8 @@ homePage.get('/', (c) => {
                 </h2>
                 <p class="text-xl text-gray-700 leading-relaxed mb-8">
                     ${lang === 'ar'
-                        ? 'د. محمد سعيد ابن محسن علي - استشاري متخصص في جراحة القولون والمستقيم مع خبرة بريطانية متميزة. حاصل على زمالات من أبرز المستشفيات في المملكة المتحدة، ويجمع بين الخبرة الأكاديمية والمهارات السريرية المتقدمة في علاج أمراض القولون والمستقيم.'
-                        : 'Dr. Mohammed Saeed bin Mohsen Ali - A specialized consultant in colorectal surgery with distinguished British experience. Holds fellowships from the most prominent hospitals in the United Kingdom, combining academic expertise with advanced clinical skills in treating colorectal diseases.'}
+                        ? 'د. محمد سعيد بن علي - استشاري متخصص في جراحة القولون والمستقيم مع خبرة بريطانية متميزة. حاصل على زمالات من أبرز المستشفيات في المملكة المتحدة، ويجمع بين الخبرة الأكاديمية والمهارات السريرية المتقدمة في علاج أمراض القولون والمستقيم.'
+                        : 'Dr. Mohammed Saeed bin Ali - A specialized consultant in colorectal surgery with distinguished British experience. Holds fellowships from the most prominent hospitals in the United Kingdom, combining academic expertise with advanced clinical skills in treating colorectal diseases.'}
                 </p>
                 <div class="flex gap-4 justify-center">
                     <a href="/about" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">

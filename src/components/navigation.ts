@@ -17,7 +17,7 @@ export function getNavigation(lang: 'ar' | 'en' = 'ar', currentPath: string = '/
             </div>
             <div>
               <h1 class="text-xl font-bold text-gray-800">
-                ${lang === 'ar' ? 'د. محمد سعيد' : 'Dr. Mohammed Saeed'}
+                ${lang === 'ar' ? 'د. محمد سعيد بن علي' : 'Dr. Mohammed Saeed bin Ali'}
               </h1>
               <p class="text-xs text-gray-600">
                 ${lang === 'ar' ? 'استشاري جراحة القولون والمستقيم' : 'Consultant Colorectal Surgeon'}
