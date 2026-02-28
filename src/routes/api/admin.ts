@@ -1261,7 +1261,7 @@ admin.delete('/doctor-images/:id', async (c) => {
  */
 admin.post('/upload-image', async (c) => {
   try {
-    const { MEDIA_BUCKET } = c.env
+    const { DB } = c.env
     
     // Parse form data
     const formData = await c.req.formData()
@@ -1298,25 +1298,18 @@ admin.post('/upload-image', async (c) => {
     const ext = file.name.split('.').pop()
     const filename = `doctor-${timestamp}-${randomStr}.${ext}`
     
-    // Convert file to ArrayBuffer
+    // Convert file to base64
     const arrayBuffer = await file.arrayBuffer()
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
     
-    // Upload to R2 if available
-    let imageUrl = ''
+    // Store in D1 database
+    await DB.prepare(`
+      INSERT INTO media_files (filename, content_type, file_data, file_size, created_at)
+      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `).bind(filename, file.type, base64, file.size).run()
     
-    if (MEDIA_BUCKET) {
-      // Upload to R2
-      await MEDIA_BUCKET.put(filename, arrayBuffer, {
-        httpMetadata: {
-          contentType: file.type,
-        },
-      })
-      // Use API endpoint to serve images from R2
-      imageUrl = `/api/media/${filename}`
-    } else {
-      // Development fallback: use static URL
-      imageUrl = `/static/uploads/${filename}`
-    }
+    // Return API URL
+    const imageUrl = `/api/media/${filename}`
     
     return c.json({
       success: true,
