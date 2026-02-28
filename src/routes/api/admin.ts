@@ -397,8 +397,8 @@ admin.post('/media/upload-file', async (c) => {
       const result = await DB.prepare(`
         INSERT INTO media_library (
           filename, original_filename, file_url, file_type, mime_type,
-          file_size, alt_text_ar, alt_text_en, uploaded_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          file_size, alt_text_ar, alt_text_en, uploaded_by, usage_type
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         filename,
         file.name,
@@ -408,7 +408,8 @@ admin.post('/media/upload-file', async (c) => {
         file.size,
         formData.get('alt_text_ar') || '',
         formData.get('alt_text_en') || '',
-        1 // Admin user
+        1, // Admin user
+        formData.get('usage_type') || 'general'
       ).run()
 
       return c.json({
@@ -430,8 +431,8 @@ admin.post('/media/upload-file', async (c) => {
     const result = await DB.prepare(`
       INSERT INTO media_library (
         filename, original_filename, file_url, file_type, mime_type,
-        file_size, alt_text_ar, alt_text_en, uploaded_by
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        file_size, alt_text_ar, alt_text_en, uploaded_by, usage_type
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       filename,
       file.name,
@@ -441,7 +442,8 @@ admin.post('/media/upload-file', async (c) => {
       file.size,
       formData.get('alt_text_ar') || '',
       formData.get('alt_text_en') || '',
-      1 // Admin user
+      1, // Admin user
+      formData.get('usage_type') || 'general'
     ).run()
 
     return c.json({
@@ -1325,6 +1327,64 @@ admin.post('/upload-image', async (c) => {
       success: false,
       error: 'Failed to upload image: ' + (error as Error).message 
     }, 500)
+  }
+})
+
+// Get doctor profile image
+admin.get('/media/doctor-profile', async (c) => {
+  try {
+    const { DB } = c.env
+    
+    const { results } = await DB.prepare(`
+      SELECT * FROM media_library 
+      WHERE usage_type = 'doctor_profile'
+      ORDER BY created_at DESC
+      LIMIT 1
+    `).all()
+
+    if (results.length === 0) {
+      return c.json({ 
+        success: true, 
+        image: null,
+        fallback: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800'
+      })
+    }
+
+    return c.json({ 
+      success: true, 
+      image: results[0]
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch doctor profile image' }, 500)
+  }
+})
+
+// Update doctor profile image
+admin.put('/media/doctor-profile/:id', async (c) => {
+  try {
+    const { DB } = c.env
+    const id = c.req.param('id')
+    
+    // First, set all other doctor_profile images to 'general'
+    await DB.prepare(`
+      UPDATE media_library 
+      SET usage_type = 'general'
+      WHERE usage_type = 'doctor_profile'
+    `).run()
+    
+    // Then set this image as doctor_profile
+    await DB.prepare(`
+      UPDATE media_library 
+      SET usage_type = 'doctor_profile'
+      WHERE id = ?
+    `).bind(id).run()
+
+    return c.json({ 
+      success: true, 
+      message: 'Doctor profile image updated successfully'
+    })
+  } catch (error) {
+    return c.json({ error: 'Failed to update doctor profile image' }, 500)
   }
 })
 

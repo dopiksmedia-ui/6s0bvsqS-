@@ -11,6 +11,43 @@ type Bindings = {
 const media = new Hono<{ Bindings: Bindings }>()
 
 /**
+ * GET /api/media/doctor-profile
+ * Get doctor profile image
+ */
+media.get('/doctor-profile', async (c) => {
+  try {
+    const { DB } = c.env
+    
+    if (!DB) {
+      return c.json({ error: 'Database not configured' }, 503)
+    }
+    
+    const { results } = await DB.prepare(`
+      SELECT * FROM media_library 
+      WHERE usage_type = 'doctor_profile'
+      ORDER BY created_at DESC
+      LIMIT 1
+    `).all()
+
+    if (results.length === 0) {
+      return c.json({ 
+        success: true, 
+        image: null,
+        fallback: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800'
+      })
+    }
+
+    return c.json({ 
+      success: true, 
+      image: results[0]
+    })
+  } catch (error) {
+    console.error('Doctor profile error:', error)
+    return c.json({ error: 'Failed to fetch doctor profile' }, 500)
+  }
+})
+
+/**
  * GET /api/media/:filename
  * Serve image from D1 database
  */

@@ -845,6 +845,42 @@ homePage.get('/', (c) => {
         </div>
     </section>
 
+    <!-- Load Doctor Profile Image -->
+    <script>
+    (async function loadDoctorProfile() {
+        try {
+            const response = await fetch('/api/media/doctor-profile');
+            const data = await response.json();
+            
+            const doctorImg = document.querySelector('img[alt*="محمد سعيد"]');
+            if (!doctorImg) return;
+            
+            if (data.success && data.image) {
+                // تم العثور على صورة في قاعدة البيانات
+                // يمكن أن تكون base64 أو رابط خارجي
+                const imageUrl = data.image.file_path || data.image.file_url;
+                
+                // إذا كانت الصورة base64، استخدمها مباشرة
+                if (imageUrl.startsWith('data:image')) {
+                    doctorImg.src = imageUrl;
+                } else if (imageUrl.startsWith('http')) {
+                    // رابط خارجي
+                    doctorImg.src = imageUrl;
+                } else {
+                    // رابط محلي
+                    doctorImg.src = imageUrl;
+                }
+            } else if (data.fallback) {
+                // استخدم الصورة الاحتياطية
+                doctorImg.src = data.fallback;
+            }
+        } catch (error) {
+            console.error('Failed to load doctor profile:', error);
+            // الصورة الاحتياطية موجودة بالفعل في onerror
+        }
+    })();
+    </script>
+
     ${getFooter(lang)}
 </body>
 </html>
