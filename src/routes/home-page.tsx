@@ -580,6 +580,209 @@ homePage.get('/', (c) => {
         fetchLatestArticles();
     </script>
 
+    <!-- Patient Testimonials -->
+    <section class="py-20 bg-gradient-to-br from-purple-900 via-blue-900 to-blue-800 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4">
+                ${lang === 'ar' ? 'آراء المرضى' : 'Patient Testimonials'}
+            </h2>
+            <p class="text-center text-blue-200 mb-12 text-lg">
+                ${lang === 'ar' ? 'شهادات من بعض المرضى الذين عالجناهم' : 'Testimonials from some of the patients we treated'}
+            </p>
+
+            <div id="testimonials-container" class="grid md:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar' 
+                            ? 'الحمد لله على نجاح العملية. د. محمد طبيب ماهر جداً وخبير في جراحات القولون. أجرى لي عملية بالروبوت وكانت النتائج ممتازة. الألم كان قليل جداً والتعافي سريع. شكراً دكتور!'
+                            : 'Thank God for the successful surgery. Dr. Mohammed is a very skilled doctor and expert in colorectal surgery. He performed robotic surgery for me and the results were excellent. Pain was minimal and recovery was quick. Thank you doctor!'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-blue-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'عبدالله الشمري' : 'Abdullah Al-Shammari'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'جراحة القولون بالروبوت' : 'Robotic Colorectal Surgery'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar'
+                            ? 'عانيت من مشكلة البواسير لسنوات طويلة. د. محمد عالجني بأحدث التقنيات وبدون ألم يذكر. الآن أنا أحسن بكثير. أنصح به بشدة لكل من يعاني من مشاكل مماثلة.'
+                            : 'I suffered from hemorrhoids for many years. Dr. Mohammed treated me with the latest techniques with minimal pain. Now I am much better. I highly recommend him to anyone suffering from similar problems.'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-pink-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-pink-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'سارة القحطاني' : 'Sarah Al-Qahtani'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'علاج البواسير' : 'Hemorrhoid Treatment'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar'
+                            ? 'تجربتي مع د. محمد كانت رائعة من البداية للنهاية. شخص الحالة بدقة وأجرى لي منظار علاجي ناجح. ما شاء الله عليه، يشرح كل شيء بوضوح ويطمئن المريض. الله يجزاه خير!'
+                            : 'My experience with Dr. Mohammed was wonderful from start to finish. He diagnosed the condition accurately and performed a successful therapeutic endoscopy. He explains everything clearly and reassures the patient. May God reward him!'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-green-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-green-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'فهد المالكي' : 'Fahd Al-Malki'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'منظار القولون العلاجي' : 'Therapeutic Colonoscopy'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Testimonials (hidden by default) -->
+                <div class="testimonial-card hidden more-testimonials bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar'
+                            ? 'كنت أعاني من التهاب مزمن في القولون. د. محمد وضع لي خطة علاج متكاملة وتابع معي بكل اهتمام. الحمدلله تحسنت حالتي كثيراً. دكتور متمكن ويهتم براحة المريض.'
+                            : 'I was suffering from chronic colitis. Dr. Mohammed developed a comprehensive treatment plan and followed up with me attentively. Thank God my condition improved greatly. A competent doctor who cares about patient comfort.'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-yellow-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-yellow-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'خالد العتيبي' : 'Khaled Al-Otaibi'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'علاج التهاب القولون' : 'Colitis Treatment'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card hidden more-testimonials bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar'
+                            ? 'أجرى لي د. محمد عملية استئصال ورم من القولون. العملية كانت ناجحة جداً والتعافي كان أسرع من المتوقع. دكتور محترف ويستخدم أحدث التقنيات. ننصح به!'
+                            : 'Dr. Mohammed performed surgery to remove a tumor from my colon. The operation was very successful and recovery was faster than expected. A professional doctor who uses the latest techniques. Highly recommend!'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-red-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-red-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'نورة الدوسري' : 'Noura Al-Dosari'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'استئصال ورم القولون' : 'Colon Tumor Removal'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card hidden more-testimonials bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/20 transition">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                    </div>
+                    <p class="text-lg mb-6 leading-relaxed">
+                        "${lang === 'ar'
+                            ? 'راجعت د. محمد بسبب نزيف متكرر. شخص الحالة بسرعة وأجرى الإجراء اللازم. ما شاء الله، خبرته واضحة وأسلوبه في التعامل ممتاز. الحمد لله على الشفاء.'
+                            : 'I consulted Dr. Mohammed due to recurrent bleeding. He quickly diagnosed the condition and performed the necessary procedure. His expertise is evident and his approach is excellent. Thank God for the recovery.'}"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-indigo-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-indigo-800"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">${lang === 'ar' ? 'محمد الغامدي' : 'Mohammed Al-Ghamdi'}</div>
+                            <div class="text-sm text-blue-200">${lang === 'ar' ? 'علاج النزيف' : 'Bleeding Treatment'}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="load-more-testimonials" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition inline-flex items-center gap-2">
+                    <i class="fas fa-plus-circle"></i>
+                    <span id="load-more-text">${lang === 'ar' ? 'عرض المزيد' : 'Load More'}</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Testimonials Load More functionality
+        let testimonialsExpanded = false;
+        
+        document.getElementById('load-more-testimonials').addEventListener('click', function() {
+            const moreTestimonials = document.querySelectorAll('.more-testimonials');
+            const button = this;
+            const buttonText = document.getElementById('load-more-text');
+            
+            if (!testimonialsExpanded) {
+                // Show more testimonials
+                moreTestimonials.forEach(testimonial => {
+                    testimonial.classList.remove('hidden');
+                });
+                buttonText.textContent = ${lang === 'ar' ? "'عرض أقل'" : "'Show Less'"};
+                testimonialsExpanded = true;
+            } else {
+                // Hide extra testimonials
+                moreTestimonials.forEach(testimonial => {
+                    testimonial.classList.add('hidden');
+                });
+                buttonText.textContent = ${lang === 'ar' ? "'عرض المزيد'" : "'Load More'"};
+                testimonialsExpanded = false;
+                
+                // Scroll to testimonials section
+                document.querySelector('#testimonials-container').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        });
+    </script>
+
     <!-- Services CTA -->
     <section class="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white">
         <div class="container mx-auto px-6 text-center">
