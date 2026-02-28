@@ -68,7 +68,7 @@ homePage.get('/', (c) => {
     ${getNavigation(lang, '/')}
 
     <!-- Hero Section with Doctor Image -->
-    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white overflow-hidden">
+    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-blue-800 text-white overflow-hidden">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
             <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
@@ -90,7 +90,7 @@ homePage.get('/', (c) => {
                         ${lang === 'ar' ? 'د. محمد سعيد بن علي' : 'Dr. Mohammed Saeed bin Ali'}
                     </h1>
                     
-                    <div class="h-1 w-24 bg-gradient-to-r from-blue-400 to-teal-400 mb-6 ${lang === 'ar' ? 'mr-auto lg:mr-0' : 'ml-auto lg:ml-0'} mx-auto lg:mx-0"></div>
+                    <div class="h-1 w-24 bg-gradient-to-r from-teal-400 to-blue-400 mb-6 ${lang === 'ar' ? 'mr-auto lg:mr-0' : 'ml-auto lg:ml-0'} mx-auto lg:mx-0"></div>
                     
                     <p class="text-xl md:text-2xl mb-6 text-blue-100 font-light">
                         ${lang === 'ar' 
@@ -106,7 +106,7 @@ homePage.get('/', (c) => {
                     
                     <!-- Call to Action Buttons -->
                     <div class="flex gap-4 justify-center lg:justify-start flex-wrap">
-                        <a href="/booking?lang=${lang}" class="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-2">
+                        <a href="/booking?lang=${lang}" class="group bg-gradient-to-r from-blue-600 to-teal-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-2xl transition-all shadow-xl hover:scale-105 inline-flex items-center gap-2">
                             <i class="fas fa-calendar-check group-hover:scale-110 transition-transform"></i>
                             ${lang === 'ar' ? 'احجز موعدك الآن' : 'Book Appointment'}
                         </a>
@@ -121,7 +121,7 @@ homePage.get('/', (c) => {
                 <div class="${lang === 'ar' ? 'lg:order-1' : 'lg:order-2'} relative">
                     <div class="relative max-w-lg mx-auto">
                         <!-- Decorative Elements -->
-                        <div class="absolute -top-6 -${lang === 'ar' ? 'right' : 'left'}-6 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -top-6 -${lang === 'ar' ? 'right' : 'left'}-6 w-72 h-72 bg-purple-400/20 rounded-full blur-3xl"></div>
                         <div class="absolute -bottom-6 -${lang === 'ar' ? 'left' : 'right'}-6 w-72 h-72 bg-teal-400/20 rounded-full blur-3xl"></div>
                         
                         <!-- Main Image Container -->
