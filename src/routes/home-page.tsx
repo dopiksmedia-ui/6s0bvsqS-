@@ -459,6 +459,131 @@ homePage.get('/', (c) => {
         fetchVideos();
     </script>
 
+    <!-- Latest Articles Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-newspaper text-blue-600 ${lang === 'ar' ? 'ml-3' : 'mr-3'}"></i>
+                    ${lang === 'ar' ? 'أحدث المقالات' : 'Latest Articles'}
+                </h2>
+                <p class="text-xl text-gray-600">
+                    ${lang === 'ar' 
+                        ? 'مقالات طبية متخصصة في جراحة القولون والمستقيم' 
+                        : 'Specialized medical articles in colorectal surgery'}
+                </p>
+            </div>
+
+            <!-- Articles Grid -->
+            <div id="articles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Articles will be loaded here -->
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-spinner fa-spin text-4xl text-blue-600 mb-4"></i>
+                    <p class="text-gray-600">${lang === 'ar' ? 'جاري تحميل المقالات...' : 'Loading articles...'}</p>
+                </div>
+            </div>
+
+            <!-- View All Articles Button -->
+            <div class="text-center">
+                <a href="/articles?lang=${lang}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-flex items-center gap-2">
+                    <i class="fas fa-book-open"></i>
+                    ${lang === 'ar' ? 'المزيد من المقالات' : 'More Articles'}
+                    <i class="fas fa-arrow-${lang === 'ar' ? 'left' : 'right'}"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Fetch and display latest articles
+        async function fetchLatestArticles() {
+            try {
+                const response = await fetch('/api/articles?limit=4&lang=${lang}');
+                const result = await response.json();
+                
+                const container = document.getElementById('articles-container');
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    container.innerHTML = result.data.map(article => createArticleCard(article)).join('');
+                } else {
+                    // Show empty state
+                    container.innerHTML = \`
+                        <div class="col-span-full text-center py-12">
+                            <i class="fas fa-folder-open text-6xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-600 text-lg">\${${lang === 'ar' ? "'لا توجد مقالات متاحة حالياً'" : "'No articles available yet'"}}</p>
+                        </div>
+                    \`;
+                }
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+                document.getElementById('articles-container').innerHTML = \`
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-exclamation-circle text-6xl text-red-300 mb-4"></i>
+                        <p class="text-gray-600">\${${lang === 'ar' ? "'حدث خطأ في تحميل المقالات'" : "'Error loading articles'"}}</p>
+                    </div>
+                \`;
+            }
+        }
+
+        function createArticleCard(article) {
+            // Get correct slug based on language
+            const slug = ${lang === 'ar' ? 'article.slug_ar' : 'article.slug_en'} || article.slug_ar || article.slug_en;
+            
+            // Get excerpt or summary
+            const excerpt = ${lang === 'ar' ? 'article.summary_ar' : 'article.summary_en'} || ${lang === 'ar' ? 'article.content_ar' : 'article.content_en'}?.substring(0, 120) + '...' || '';
+            
+            // Format publish date
+            const publishDate = article.published_at ? new Date(article.published_at).toLocaleDateString('${lang === 'ar' ? 'ar-SA' : 'en-US'}', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) : '';
+
+            return \`
+                <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="/articles/\${slug}?lang=${lang}" class="block">
+                        <div class="relative h-48 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+                            \${article.featured_image 
+                                ? \`<img src="\${article.featured_image}" alt="\${${lang === 'ar' ? 'article.title_ar' : 'article.title_en'}}" class="w-full h-full object-cover">\`
+                                : \`<div class="w-full h-full flex items-center justify-center">
+                                    <i class="fas fa-file-medical text-6xl text-blue-400"></i>
+                                   </div>\`
+                            }
+                            <div class="absolute top-3 ${lang === 'ar' ? 'right-3' : 'left-3'}">
+                                <span class="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                                    \${(${lang === 'ar' ? 'article.category_ar' : 'article.category_en'}) || (${lang === 'ar' ? "'طب عام'" : "'General'"})}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold text-gray-800 text-lg mb-3 line-clamp-2 hover:text-blue-600 transition min-h-[56px]">
+                                \${${lang === 'ar' ? 'article.title_ar' : 'article.title_en'}}
+                            </h3>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3 min-h-[60px]">
+                                \${excerpt}
+                            </p>
+                            <div class="flex items-center justify-between text-sm text-gray-500 pt-3 border-t border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-user-md text-blue-600"></i>
+                                    <span>${lang === 'ar' ? 'د. محمد سعيد' : 'Dr. Mohammed Saeed'}</span>
+                                </div>
+                                \${publishDate ? \`
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-calendar-alt text-gray-400"></i>
+                                        <span>\${publishDate}</span>
+                                    </div>
+                                \` : ''}
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            \`;
+        }
+
+        // Load articles on page load
+        fetchLatestArticles();
+    </script>
+
     <!-- Services CTA -->
     <section class="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 text-white">
         <div class="container mx-auto px-6 text-center">
