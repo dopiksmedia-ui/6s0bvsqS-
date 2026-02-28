@@ -13,12 +13,5 @@
       "database_id": "6027a945-ee09-4257-80af-0588ed77f317",
       "migrations_dir": "migrations"
     }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "MEDIA_BUCKET",
-      "bucket_name": "doctor-media",
-      "preview_bucket_name": "doctor-media-preview"
-    }
   ]
 }
