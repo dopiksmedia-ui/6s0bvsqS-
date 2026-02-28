@@ -172,7 +172,7 @@ homePage.get('/', (c) => {
     <!-- Trust Statistics Bar -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
                 <div class="p-6">
                     <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">3</div>
                     <div class="text-gray-600 font-medium">${lang === 'ar' ? 'زمالات بريطانية' : 'UK Fellowships'}</div>
@@ -184,10 +184,6 @@ homePage.get('/', (c) => {
                 <div class="p-6">
                     <div class="text-4xl md:text-5xl font-bold text-purple-600 mb-2">98%</div>
                     <div class="text-gray-600 font-medium">${lang === 'ar' ? 'رضا المرضى' : 'Patient Satisfaction'}</div>
-                </div>
-                <div class="p-6">
-                    <div class="text-4xl md:text-5xl font-bold text-orange-600 mb-2">${lang === 'ar' ? 'متقدمة' : 'Advanced'}</div>
-                    <div class="text-gray-600 font-medium">${lang === 'ar' ? 'تقنيات حديثة' : 'Modern Techniques'}</div>
                 </div>
             </div>
         </div>
