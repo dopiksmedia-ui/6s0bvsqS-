@@ -405,12 +405,11 @@ admin.post('/media/upload-file', async (c) => {
       // Save to media_library with metadata
       const result = await DB.prepare(`
         INSERT INTO media_library (
-          filename, original_filename, file_url, file_type, mime_type,
+          file_name, file_path, file_type, mime_type,
           file_size, alt_text_ar, alt_text_en, uploaded_by, usage_type
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         filename,
-        file.name,
         fileUrl,
         'image',
         file.type,
@@ -439,12 +438,11 @@ admin.post('/media/upload-file', async (c) => {
     // Save metadata to database (R2 upload)
     const result = await DB.prepare(`
       INSERT INTO media_library (
-        filename, original_filename, file_url, file_type, mime_type,
+        file_name, file_path, file_type, mime_type,
         file_size, alt_text_ar, alt_text_en, uploaded_by, usage_type
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       filename,
-      file.name,
       fileUrl,
       'image',
       file.type,
@@ -497,12 +495,10 @@ admin.post('/media/upload', async (c) => {
     // Insert into media library
     const result = await DB.prepare(`
       INSERT INTO media_library (
-        filename, original_filename, file_url, file_type, mime_type,
-        file_size, width, height, alt_text_ar, alt_text_en,
-        caption_ar, caption_en, uploaded_by
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        file_name, file_path, file_type, mime_type,
+        file_size, width, height, alt_text_ar, alt_text_en, uploaded_by, usage_type
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
-      filename,
       filename,
       file_url,
       file_type,
@@ -512,9 +508,8 @@ admin.post('/media/upload', async (c) => {
       height,
       alt_text_ar,
       alt_text_en,
-      caption_ar,
-      caption_en,
-      1 // Admin user
+      1, // Admin user
+      'general'
     ).run()
 
     return c.json({
